@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的聊天</title>
+</head>
+<body>
+    <h1>我的聊天</h1>
+    <a href="/home">我的主页</a><br>
+    <a href="/">商品列表</a><br>
+    <div th:each="chat : ${chatList}">
+        <p th:text="${chat.user1 == username ? chat.user2 : chat.user1}"></p>
+        <a th:href="@{/chat/{fromUser}{pid}/{toUser}{pid}(fromUser=${username}, toUser=${chat.user1 == username ? chat.user2 : chat.user1}, pid = ${chat.pid})}">查看详情</a><br>
+    </div>
+</body>
+</html>

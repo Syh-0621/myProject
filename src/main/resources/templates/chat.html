@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+    <a href="/home">我的主页</a><br>
+    <a href="/chat/chatList">我的聊天</a><br>
+    <a href="/index">商品列表</a><br>
+    <h1>和<span th:text="${toUser}"></span>的聊天</h1>
+    <div id="chat">
+        <div id="msg"></div>
+        <div id="input">
+            <input type="text" id="msgContent" placeholder="请输入消息内容">
+            <button id="send">发送</button>
+        </div>
+    </div>
+<script th:inline="javascript" type="text/javascript">
+    let fromUser = [[${fromUser}]];
+    let toUser = [[${toUser}]];
+    let pid = [[${pid}]];
+    const socket = new WebSocket("ws://localhost:8080/websocket/" + fromUser);
+    socket.onopen = function (event) {
+        console.log("连接成功");
+    }
+    socket.onmessage = function (event) {
+        console.log("收到消息：" + event.data);
+        let json = JSON.parse(event.data);
+        json.MFromUser === fromUser ? json.MFromUser = "我" : null;
+        json.MFromUser === 'server' ? json.MFromUser = "系统" : null;
+        json.MToUser === fromUser
+        || json.MToUser === '系统'
+        || json.MFromUser === '我' ?
+            document.getElementById("msg").innerHTML += "<p>" + json.MFromUser + ":" + json.MContent + "</p>"
+            : null;
+    }
+    socket.onclose = function (event) {
+        console.log("连接关闭");
+    }
+    document.getElementById("send").onclick = function () {
+        // private String MFromUser;
+        // private String MToUser;
+        // private String MContent;
+        let param = {
+            "MFromUser": fromUser,
+            "MToUser": toUser,
+            "MContent": document.getElementById("msgContent").value
+        }
+        socket.send(JSON.stringify(param));
+    }
+</script>
+</body>
+</html>

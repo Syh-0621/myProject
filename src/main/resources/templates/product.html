@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <p hidden="hidden" th:text="${product.pid}" id="pid"></p>
+    <p hidden="hidden" th:text="${username}" id="username"></p>
+    <h1 th:text="${product.pname}"></h1>
+    <p th:text="${product.uname}" id="uname"></p>
+    <p th:text="${product.publish}"></p>
+    <p th:text="${product.depict}"></p>
+    <img th:src="${product.image}" alt="" width="200px" height="200px">
+    <p th:text="${product.price}"></p>
+    <button onclick="addchat()">和他聊聊</button>
+    <a th:href="@{/index}">返回首页</a>
+
+<script th:inline="javascript" type="text/javascript">
+    const user1 = document.getElementById("username").innerText;
+    const user2 = document.getElementById("uname").innerText;
+    const pid = document.getElementById("pid").innerText;
+    function addchat() {
+        axios.post("/chat/add?user1="+user1+"&user2="+user2+"&pid="+pid)
+            .then(function (response) {
+            if (response.data === "success") {
+                window.location.href = "/chat/"+user1+pid+"/"+user2+pid;
+            }
+        })
+    }
+</script>
+</body>
+</html>

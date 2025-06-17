@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>校园二手交易平台 - 登录</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      display: flex;
+      max-width: 1000px;
+      width: 100%;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0, 0, 150, 0.1);
+    }
+
+    .left-panel {
+      flex: 1;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .left-panel::before {
+      content: "";
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      top: -100px;
+      right: -100px;
+    }
+
+    .left-panel::after {
+      content: "";
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      bottom: -80px;
+      left: -80px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo i {
+      font-size: 32px;
+      margin-right: 15px;
+      background: rgba(255, 255, 255, 0.2);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo h1 {
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .slogan {
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .slogan h2 {
+      font-size: 32px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .slogan p {
+      font-size: 16px;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .features {
+      position: relative;
+      z-index: 2;
+    }
+
+    .feature {
+      display: flex;
+      align-items: center;
+      margin: 15px 0;
+    }
+
+    .feature i {
+      background: rgba(255, 255, 255, 0.2);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+    }
+
+    .feature p {
+      font-size: 15px;
+    }
+
+    .right-panel {
+      flex: 1;
+      padding: 60px 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .login-header h2 {
+      color: #2c3e50;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .login-header p {
+      color: #7f8c8d;
+      font-size: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #2c3e50;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-with-icon i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #3498db;
+      font-size: 18px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 14px 20px 14px 50px;
+      border: 2px solid #e3f2fd;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: #f8fbfe;
+      color: #2c3e50;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #4facfe;
+      box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
+    }
+
+    .form-control::placeholder {
+      color: #95a5a6;
+    }
+
+    .remember-forgot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      font-size: 14px;
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+    }
+
+    .remember input {
+      margin-right: 8px;
+      accent-color: #3498db;
+    }
+
+    .forgot-password {
+      color: #3498db;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .forgot-password:hover {
+      color: #2980b9;
+      text-decoration: underline;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+    }
+
+    .btn-login:hover {
+      background: linear-gradient(to right, #3ba1fd, #00d9f2);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+    }
+
+    .signup-link {
+      text-align: center;
+      margin-top: 25px;
+      color: #7f8c8d;
+      font-size: 15px;
+    }
+
+    .signup-link a {
+      color: #3498db;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .signup-link a:hover {
+      color: #2980b9;
+      text-decoration: underline;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #ecf0f1;
+    }
+
+    .divider span {
+      padding: 0 15px;
+      color: #95a5a6;
+      font-size: 14px;
+    }
+
+    .social-login {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .social-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fbfe;
+      border: 1px solid #e3f2fd;
+      color: #3498db;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .social-btn:hover {
+      background: #e3f2fd;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .decoration {
+      position: absolute;
+      z-index: 1;
+    }
+
+    .book {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 24px;
+    }
+
+    .laptop {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .left-panel {
+        padding: 30px;
+      }
+
+      .right-panel {
+        padding: 40px 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="left-panel">
+    <div class="decoration book">
+      <i class="fas fa-book"></i>
+    </div>
+    <div class="decoration laptop">
+      <i class="fas fa-laptop"></i>
+    </div>
+    <div class="logo">
+      <i class="fas fa-recycle"></i>
+      <h1>CampusTrade</h1>
+    </div>
+    <div class="slogan">
+      <h2>校园二手交易平台</h2>
+      <p>连接校园，共享资源，让闲置物品焕发新生</p>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <i class="fas fa-check-circle"></i>
+        <p>安全可靠的校园内交易环境</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-check-circle"></i>
+        <p>教材、电子产品、生活用品一站式交易</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-check-circle"></i>
+        <p>学生认证，交易更放心</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="login-header">
+      <h2>欢迎回来</h2>
+      <p>请登录您的账号继续使用平台</p>
+    </div>
+
+    <form action="doLogin" method="post">
+      <div class="form-group">
+        <label for="username">用户名</label>
+        <div class="input-with-icon">
+          <i class="fas fa-user"></i>
+          <input type="text" id="username" name="username" class="form-control" placeholder="请输入学号或用户名">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">密码</label>
+        <div class="input-with-icon">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" name="password" class="form-control" placeholder="请输入密码">
+        </div>
+      </div>
+
+      <div class="remember-forgot">
+        <div class="remember">
+          <input type="checkbox" id="remember" name="remember-me">
+          <label for="remember">记住我</label>
+        </div>
+        <a href="#" class="forgot-password">忘记密码?</a>
+      </div>
+
+      <button type="submit" class="btn-login">登录</button>
+
+      <div class="divider">
+        <span>或使用以下方式登录</span>
+      </div>
+
+      <div class="social-login">
+        <div class="social-btn">
+          <i class="fab fa-weixin"></i>
+        </div>
+        <div class="social-btn">
+          <i class="fab fa-qq"></i>
+        </div>
+        <div class="social-btn">
+          <i class="fab fa-weibo"></i>
+        </div>
+      </div>
+
+      <div class="signup-link">
+        还没有账号? <a href="/register">立即注册</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // 简单的表单交互效果
+  document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('.form-control');
+
+    inputs.forEach(input => {
+      // 添加聚焦效果
+      input.addEventListener('focus', function() {
+        this.parentElement.parentElement.style.transform = 'translateY(-2px)';
+      });
+
+      // 移除聚焦效果
+      input.addEventListener('blur', function() {
+        this.parentElement.parentElement.style.transform = 'translateY(0)';
+      });
+    });
+
+    // 登录按钮点击效果
+    const loginBtn = document.querySelector('.btn-login');
+    loginBtn.addEventListener('click', function(e) {
+      // e.preventDefault();
+
+      // 简单验证
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if(username === '' || password === '') {
+        alert('请输入用户名和密码！');
+        return;
+      }
+
+      // 模拟登录
+      this.innerHTML = '登录中...';
+      // this.disabled = true;
+      //
+      // setTimeout(() => {
+      //   alert('登录成功！');
+      //   this.innerHTML = '登录';
+      //   this.disabled = false;
+      // }, 1500);
+    });
+  });
+</script>
+</body>
+</html>

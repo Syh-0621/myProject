@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园二手交易平台 - 注册</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 460px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(100, 149, 237, 0.15);
+            padding: 40px;
+            position: relative;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #6a93cb 0%, #a4bfef 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            box-shadow: 0 4px 10px rgba(106, 147, 203, 0.25);
+        }
+
+        .logo-icon i {
+            font-size: 24px;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-text span {
+            color: #5d9cec;
+        }
+
+        .header h2 {
+            color: #4a6fa5;
+            font-size: 24px;
+            margin: 10px 0 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a6583;
+            font-weight: 500;
+            font-size: 14px;
+            padding-left: 8px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a93cb;
+            font-size: 18px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 16px 20px 16px 52px;
+            border: 2px solid #e4edf9;
+            border-radius: 14px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8fbff;
+            color: #4a6583;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #8ab6f9;
+            box-shadow: 0 0 0 3px rgba(138, 182, 249, 0.2);
+        }
+
+        .form-control::placeholder {
+            color: #a6b9d0;
+            font-weight: 400;
+        }
+
+        .verification-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .verification-group .input-with-icon {
+            flex: 1;
+        }
+
+        .verification-group .btn-send {
+            background: linear-gradient(to right, #6a93cb, #8ab6f9);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            padding: 0 22px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 140px;
+            box-shadow: 0 4px 12px rgba(106, 147, 203, 0.25);
+            font-size: 15px;
+        }
+
+        .verification-group .btn-send:hover {
+            background: linear-gradient(to right, #5d84b8, #7aa5e6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(106, 147, 203, 0.35);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a93cb;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 17px;
+            background: linear-gradient(to right, #6a93cb, #8ab6f9);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(106, 147, 203, 0.3);
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-register:hover {
+            background: linear-gradient(to right, #5d84b8, #7aa5e6);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 147, 203, 0.4);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 28px;
+            color: #7f8c8d;
+            font-size: 15px;
+        }
+
+        .login-link a {
+            color: #5d9cec;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            margin-left: 6px;
+        }
+
+        .login-link a:hover {
+            color: #4a89dc;
+            text-decoration: underline;
+        }
+
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            margin: 20px 0;
+        }
+
+        .terms input {
+            margin-top: 5px;
+            margin-right: 12px;
+            accent-color: #6a93cb;
+        }
+
+        .terms label {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+
+        .terms a {
+            color: #5d9cec;
+            text-decoration: none;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        .password-strength {
+            margin-top: 10px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .strength-bar {
+            height: 5px;
+            border-radius: 3px;
+            background: #e4edf9;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .decoration {
+            position: absolute;
+            z-index: -1;
+        }
+
+        .decoration.circle1 {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e6f0ff 0%, #d5e5ff 100%);
+            top: -80px;
+            right: -80px;
+        }
+
+        .decoration.circle2 {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e6f0ff 0%, #d5e5ff 100%);
+            bottom: -60px;
+            left: -60px;
+        }
+
+        .decoration-item {
+            position: absolute;
+            color: rgba(212, 228, 255, 0.7);
+            font-size: 24px;
+            z-index: -1;
+        }
+
+        .decoration-item.book {
+            top: 30px;
+            left: 30px;
+        }
+
+        .decoration-item.laptop {
+            bottom: 40px;
+            right: 40px;
+            transform: rotate(15deg);
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .verification-group {
+                flex-direction: column;
+            }
+
+            .verification-group .btn-send {
+                width: 100%;
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="decoration circle1"></div>
+<div class="decoration circle2"></div>
+<div class="decoration-item book">
+    <i class="fas fa-book"></i>
+</div>
+<div class="decoration-item laptop">
+    <i class="fas fa-laptop"></i>
+</div>
+
+<div class="container">
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-exchange-alt"></i>
+            </div>
+            <div class="logo-text">校园<span>二手</span></div>
+        </div>
+        <h2>创建新账户</h2>
+        <p>加入校园二手交易社区，开启绿色生活</p>
+    </div>
+
+    <form id="registerForm">
+        <div class="form-group">
+            <label for="username">用户名</label>
+            <div class="input-with-icon">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" class="form-control" placeholder="设置您的用户名">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">校园邮箱</label>
+            <div class="input-with-icon">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" class="form-control" placeholder="输入您的校园邮箱">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="verificationCode">验证码</label>
+            <div class="verification-group">
+                <div class="input-with-icon">
+                    <i class="fas fa-shield-alt"></i>
+                    <input type="text" id="verificationCode" class="form-control" placeholder="输入验证码">
+                </div>
+                <button type="button" class="btn-send" id="sendCodeBtn">发送验证码</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">密码</label>
+            <div class="input-with-icon password-container">
+<!--                <i class="fas fa-lock"></i>-->
+                <input type="password" id="password" class="form-control" placeholder="设置您的密码">
+                <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+            </div>
+            <div class="password-strength">
+                <div class="strength-bar" id="strength-bar1"></div>
+                <div class="strength-bar" id="strength-bar2"></div>
+                <div class="strength-bar" id="strength-bar3"></div>
+                <div class="strength-bar" id="strength-bar4"></div>
+            </div>
+            <div class="strength-text" id="strength-text">密码强度：弱</div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">确认密码</label>
+            <div class="input-with-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="confirmPassword" class="form-control" placeholder="再次输入密码">
+            </div>
+        </div>
+
+        <div class="terms">
+            <input type="checkbox" id="terms" checked>
+            <label for="terms">我已阅读并同意 <a href="#">服务条款</a> 和 <a href="#">隐私政策</a>，并确认使用真实校园邮箱注册</label>
+        </div>
+
+        <button type="submit" class="btn-register">立即注册</button>
+
+        <div class="login-link">
+            已有账号? <a href="/login">立即登录</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+        const strengthBars = [
+            document.getElementById('strength-bar1'),
+            document.getElementById('strength-bar2'),
+            document.getElementById('strength-bar3'),
+            document.getElementById('strength-bar4')
+        ];
+        const strengthText = document.getElementById('strength-text');
+        const sendCodeBtn = document.getElementById('sendCodeBtn');
+        const registerForm = document.getElementById('registerForm');
+
+        // 密码可见性切换
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // 密码强度检测
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+
+            // 长度检测
+            if (password.length >= 8) strength++;
+
+            // 小写字母检测
+            if (/[a-z]/.test(password)) strength++;
+
+            // 大写字母检测
+            if (/[A-Z]/.test(password)) strength++;
+
+            // 数字检测
+            if (/[0-9]/.test(password)) strength++;
+
+            // 特殊字符检测
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+            // 更新强度条
+            strengthBars.forEach((bar, index) => {
+                if (index < strength) {
+                    bar.style.background = getStrengthColor(strength);
+                    bar.style.opacity = 1;
+                } else {
+                    bar.style.background = '#e4edf9';
+                    bar.style.opacity = 0.5;
+                }
+            });
+
+            // 更新文本
+            if (strength <= 2) {
+                strengthText.textContent = '密码强度：弱';
+                strengthText.style.color = '#e74c3c';
+            } else if (strength <= 4) {
+                strengthText.textContent = '密码强度：中等';
+                strengthText.style.color = '#f39c12';
+            } else {
+                strengthText.textContent = '密码强度：强';
+                strengthText.style.color = '#2ecc71';
+            }
+        });
+
+        function getStrengthColor(strength) {
+            if (strength <= 2) return '#e74c3c';
+            if (strength <= 4) return '#f39c12';
+            return '#2ecc71';
+        }
+
+        // 发送验证码按钮逻辑
+        sendCodeBtn.addEventListener('click', function() {
+            const email = document.getElementById('email').value;
+
+            if (!email) {
+                alert('请输入邮箱地址');
+                return;
+            }
+
+            if (!validateEmail(email)) {
+                alert('请输入有效的校园邮箱地址');
+                return;
+            }
+
+            // 禁用按钮并开始倒计时
+            this.disabled = true;
+            this.style.opacity = '0.7';
+            let seconds = 60;
+
+            const timer = setInterval(() => {
+                this.textContent = `重新发送(${seconds})`;
+                seconds--;
+
+                if (seconds < 0) {
+                    clearInterval(timer);
+                    this.textContent = '发送验证码';
+                    this.disabled = false;
+                    this.style.opacity = '1';
+                    axios.post("/expire", {}, {
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        }
+                    })
+                }
+            }, 1000);
+
+            // 模拟发送验证码
+            // alert(`验证码已发送至: ${email}\n（演示模式，实际应用中会发送真实验证码）`);
+            axios.post("/code", {
+                    email: email
+                }, {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                }).then(({data}) => {
+                    alert(data)
+                })
+        });
+
+        // 邮箱验证
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // 注册表单提交
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const verificationCode = document.getElementById('verificationCode').value;
+            const terms = document.getElementById('terms').checked;
+
+            // 表单验证
+            if (!username) {
+                alert('请输入用户名');
+                return;
+            }
+
+            if (!email) {
+                alert('请输入邮箱');
+                return;
+            }
+
+            if (!validateEmail(email)) {
+                alert('请输入有效的邮箱地址');
+                return;
+            }
+
+            if (!verificationCode) {
+                alert('请输入验证码');
+                return;
+            }
+
+            if (!password) {
+                alert('请输入密码');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('密码长度至少为6位');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('两次输入的密码不一致');
+                return;
+            }
+
+            if (!terms) {
+                alert('请阅读并同意服务条款和隐私政策');
+                return;
+            }
+
+            // 模拟注册过程
+            const registerBtn = document.querySelector('.btn-register');
+            registerBtn.textContent = '注册中...';
+            registerBtn.disabled = true;
+
+            // setTimeout(() => {
+            //     alert('注册成功！\n欢迎加入校园二手交易平台');
+            //     registerBtn.textContent = '立即注册';
+            //     registerBtn.disabled = false;
+            //     // 实际应用中这里会提交表单
+            // }, 1500);
+            axios.post("/register", {
+                username: username,
+                email: email,
+                password: password,
+                code: verificationCode
+            },{
+                headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+                }
+            }).then(({data}) => {
+                if (data === "register access"){
+                    alert('注册成功！\n欢迎加入校园二手交易平台');
+                    registerBtn.textContent = '立即注册';
+                    registerBtn.disabled = false;
+                    window.location.href = "/login";
+                }
+                if (data === "register failed"){
+                    alert('注册失败，用户名已存在');
+                    registerBtn.textContent = '立即注册';
+                    registerBtn.disabled = false;
+                }
+                if (data === "code expired"){
+                    alert('验证码已过期，请重新获取');
+                    registerBtn.textContent = '立即注册';
+                    registerBtn.disabled = false;
+                }
+                if (data === "code error"){
+                    alert('验证码错误，请重新输入');
+                    registerBtn.textContent = '立即注册';
+                    registerBtn.disabled = false;
+                }
+            })
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>商品列表</h1>
+    <a href="/home">我的主页</a><br>
+    <a href="/chat/chatList">我的聊天</a><br>
+    <form action="/search" method="get">
+        <input type="text" name="keyword" placeholder="请输入商品名">
+        <input type="submit" value="搜索">
+    </form>
+    <div th:each="product : ${products}">
+        <h2 th:text="${product.pname}"></h2>
+        <img th:src="${product.image}" alt="" width="200px" height="200px">
+        <p th:text="${product.price}"></p>
+        <a th:href="@{/product/{id}(id=${product.pid})}">查看详情</a><br>
+    </div>
+</body>
+</html>

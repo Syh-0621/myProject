@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>我的主页</h1>
+    <a href="/index">商品列表</a>
+    <a href="/addproduct">发布商品</a>
+    <a href="/doLogout">退出登录</a>
+    <p>我发布的商品：</p>
+    <div th:each="product : ${products}">
+        <h2 th:text="${product.pname}"></h2>
+        <img th:src="${product.image}" alt="" width="200px" height="200px">
+        <p th:text="${product.price}"></p>
+        <a th:href="@{/product/{id}(id=${product.pid})}">查看详情</a><br>
+        <a th:href="@{/editproduct/{id}(id=${product.pid})}">编辑商品</a><br>
+        <a th:href="@{/deleteproduct/{id}(id=${product.pid})}">删除商品</a><br>
+    </div>
+</body>
+</html>
