@@ -39,7 +39,7 @@ public class ProductController {
     }
 
     @PostMapping("/addproduct")
-    public String add(Product product, @RequestParam("file") MultipartFile file, Authentication authentication) {
+    public String add(Product product, @RequestParam("file") MultipartFile[] file, Authentication authentication) {
         productService.addProduct(product, file, authentication.getName());
         return "redirect:/index";
     }

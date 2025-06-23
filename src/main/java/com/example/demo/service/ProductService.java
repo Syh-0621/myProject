@@ -9,11 +9,11 @@ public interface ProductService {
     List<Product> showAllProduct();
 
     //返回图片路径 上传失败则返回空
-    String uploadImages(MultipartFile images, String username);
+    String uploadImages(MultipartFile[] images, String username);
 
     boolean deleteImages(Product product);
 
-    String addProduct(Product product, MultipartFile images, String username);
+    String addProduct(Product product, MultipartFile[] images, String username);
 
     List<Product> searchProduct(String keyword);
 

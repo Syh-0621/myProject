@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -27,23 +28,41 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.selectAllProduct();
     }
 
+    /**
+     *
+     * @param images
+     * @param username
+     * @return
+     * 上传图片，返回图片路径，以#分隔
+     */
     @Override
-    public String uploadImages(MultipartFile images, String username) {
-        if (images.isEmpty())
+    public String uploadImages(MultipartFile[] images, String username) {
+        if (images == null || images.length == 0)
             return null;
         String folderpath = "/home/syh/Pictures/img/";
-        String filepath = username + "/" + new Random().nextInt(1000) + images.getOriginalFilename();
-        File wholepath = new File(folderpath + filepath);
-        if (!wholepath.getParentFile().exists()) {
-            wholepath.getParentFile().mkdirs();
+        String[] suffixs = new String[]{"jpg", "png", "jpeg", "bmp", "gif"};
+        List<String> imagespath = new ArrayList<>();
+
+        for (MultipartFile image : images){
+            if (image.isEmpty())
+                continue;
+            if (image.getSize() > 1024 * 1024 * 5) {
+                throw new RuntimeException("图片大小不能超过5MB");
+            }
+            String filepath = username + "/" + new Random().nextInt(1000) + image.getOriginalFilename();
+            File wholepath = new File(folderpath + filepath);
+            if (!wholepath.getParentFile().exists()) {
+                wholepath.getParentFile().mkdirs();
+            }
+            try {
+                image.transferTo(wholepath);
+            } catch (IOException | IllegalStateException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+            imagespath.add("/images/" + filepath);
         }
-        try {
-            images.transferTo(wholepath);
-        } catch (IOException | IllegalStateException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        return "/images/" + filepath;
+        return String.join(",", imagespath);
     }
 
     @Override
@@ -58,10 +77,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String addProduct(Product product, MultipartFile images, String username){
+    public String addProduct(Product product, MultipartFile[] images, String username){
         String imgpath = uploadImages(images, username);
         product.setUname(username);
         product.setImage(imgpath);
+        System.out.println(product);
         productMapper.insertProduct(product);
         return "添加成功";
     }
@@ -87,7 +107,7 @@ public class ProductServiceImpl implements ProductService {
         log.info(String.valueOf(images.isEmpty()));
         if (!images.isEmpty()) {
             deleteImages(product);
-            imgpath = uploadImages(images, username);
+//            imgpath = uploadImages(images, username);
         }
         else {
             imgpath = showProductById(product.getPid()).getImage();
