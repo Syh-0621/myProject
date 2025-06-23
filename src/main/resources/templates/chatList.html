@@ -2,15 +2,447 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>我的聊天</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天中心</title>
+    <link rel="stylesheet" href="/css/chatList.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --gray-light: #e9ecef;
+            --gray-medium: #adb5bd;
+            --gray-dark: #495057;
+            --border-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f5f7fb;
+            color: var(--dark-color);
+        }
+
+        /* 左侧边栏样式 */
+        #leftItems {
+            width: 320px;
+            background: white;
+            border-right: 1px solid var(--gray-light);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: var(--shadow);
+            z-index: 10;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .nav-links {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            color: var(--dark-color);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            background-color: var(--gray-light);
+        }
+
+        .nav-links a i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .chat-list-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-dark);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        #productInfo {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 12px;
+            background-color: white;
+            border: 1px solid var(--gray-light);
+        }
+
+        #productInfo:hover {
+            background-color: #f0f5ff;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        #productInfo.active {
+            background-color: #e6f0ff;
+            border-color: var(--primary-color);
+        }
+
+        #pImg {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 1px solid var(--gray-light);
+        }
+
+        .product-details {
+            flex: 1;
+        }
+
+        #pName {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .last-message {
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        /* 右侧聊天区域样式 */
+        #rightItems {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: #f5f7fb;
+        }
+
+        .chat-header {
+            padding: 20px;
+            background-color: white;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            z-index: 5;
+        }
+
+        .chat-header h1 {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+        }
+
+        .back-btn {
+            display: none;
+            margin-right: 15px;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin-bottom: 15px;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .received {
+            align-self: flex-start;
+            background-color: white;
+            border: 1px solid var(--gray-light);
+            border-bottom-left-radius: 5px;
+        }
+
+        .sent {
+            align-self: flex-end;
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .image-message {
+            max-width: 300px;
+            border-radius: 12px;
+            margin-top: 5px;
+        }
+
+        .input-container {
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+        }
+
+        #input {
+            display: flex;
+            width: 100%;
+            background-color: white;
+            border-radius: 30px;
+            padding: 5px 15px;
+            border: 1px solid var(--gray-light);
+        }
+
+        #input input {
+            flex-grow: 1;
+            border: none;
+            padding: 12px;
+            outline: none;
+            font-size: 1rem;
+            background: transparent;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            padding: 0;
+            background: transparent;
+            color: var(--gray-medium);
+        }
+
+        .btn-icon:hover {
+            background: var(--gray-light);
+            color: var(--primary-color);
+        }
+
+        /* 无聊天内容提示 */
+        .no-chat-selected {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 20px;
+            color: var(--gray-medium);
+        }
+
+        .no-chat-selected i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--gray-light);
+        }
+
+        .no-chat-selected h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--gray-dark);
+        }
+
+        .no-chat-selected p {
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            #leftItems {
+                width: 100%;
+                display: block;
+            }
+
+            #rightItems {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 20;
+            }
+
+            .back-btn {
+                display: block;
+            }
+
+            .chat-list-title {
+                font-size: 1rem;
+            }
+
+            #productInfo {
+                padding: 12px;
+            }
+
+            .no-chat-selected h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>我的聊天</h1>
-    <a href="/home">我的主页</a><br>
-    <a href="/">商品列表</a><br>
-    <div th:each="chat : ${chatList}">
-        <p th:text="${chat.user1 == username ? chat.user2 : chat.user1}"></p>
-        <a th:href="@{/chat/{fromUser}{pid}/{toUser}{pid}(fromUser=${username}, toUser=${chat.user1 == username ? chat.user2 : chat.user1}, pid = ${chat.pid})}">查看详情</a><br>
+<!-- 左侧聊天列表 -->
+<div id="leftItems">
+    <div class="sidebar-header">
+        <h1><i class="fas fa-comments"></i> 聊天中心</h1>
+        <p>与买家和卖家沟通</p>
     </div>
+
+    <div class="nav-links">
+        <a href="/home"><i class="fas fa-home"></i> 我的主页</a>
+        <a href="/"><i class="fas fa-shopping-bag"></i> 商品列表</a>
+    </div>
+
+    <div class="chat-list">
+        <div class="chat-list-title">最近聊天</div>
+        <div th:each="chat : ${chatList}">
+            <div id="productInfo">
+                <img id="pImg" src="" alt="商品图片">
+                <div class="product-details">
+                    <p id="pName"></p>
+                    <div class="last-message">点击查看聊天记录</div>
+                </div>
+            </div>
+            <p th:text="${chat.pid}" id="pid" hidden="hidden"></p>
+            <p th:text="${chat.user1 != username ? chat.user2 : chat.user1} + ${chat.pid}" id="FromUser" hidden="hidden"></p>
+            <p th:text="${chat.user1 == username ? chat.user2 : chat.user1} + ${chat.pid}" id="ToUser" hidden="hidden"></p>
+        </div>
+    </div>
+</div>
+
+<!-- 右侧聊天区域 -->
+<div id="rightItems">
+    <div class="chat-header">
+        <div class="back-btn" id="backBtn">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+        <h1 id="chatTitle">选择聊天开始对话</h1>
+    </div>
+
+    <div class="no-chat-selected" id="noChatSelected">
+        <i class="far fa-comment-dots"></i>
+        <h2>选择一个聊天开始对话</h2>
+        <p>从左侧列表中选择一个聊天，或者开始一个新的对话。您的消息将在这里显示。</p>
+    </div>
+
+    <div class="chat-messages" id="chatBox" style="display: none;">
+        <div id="msg"></div>
+    </div>
+
+    <div class="input-container">
+        <div id="input">
+            <input type="text" id="msgContent" placeholder="输入消息...">
+            <button class="btn btn-icon" id="imgBtn">
+                <i class="fas fa-image"></i>
+            </button>
+            <button class="btn btn-primary" id="send">
+                <i class="fas fa-paper-plane"></i> 发送
+            </button>
+            <input type="file" id="img" style="display: none">
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const pids = document.querySelectorAll('#pid');
+        pids.forEach(pid => {
+            getProduct(pid.textContent).then(data=>{
+                const productInfo = pid.parentNode.children[0];
+                const imgEle = productInfo.children[0];
+                const nameEle = productInfo.children[1];
+                nameEle.textContent = data.pname;
+                imgEle.src = data.image;
+            })
+        })
+    })
+    async function getProduct(pid){
+        let result;
+        await axios.post('/getproduct?pid=' + pid).then(function (response) {
+            result = response.data
+        })
+        return result
+    }
+</script>
+<script src="/js/chatList.js"></script>
 </body>
 </html>

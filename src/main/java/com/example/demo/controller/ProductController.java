@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.example.demo.entity.Product;
 import com.example.demo.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
@@ -81,5 +79,11 @@ public class ProductController {
         }
         productService.deleteProduct(id);
         return "redirect:/home";
+    }
+
+    @PostMapping("/getproduct")
+    @ResponseBody
+    public String getproduct(@RequestParam("pid") int pid) {
+        return JSON.toJSONString(productService.showProductById(pid));
     }
 }

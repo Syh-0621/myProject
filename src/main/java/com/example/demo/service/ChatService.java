@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Chat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ public interface ChatService {
     Chat selectByChat(Chat chat);
 
     int addChat(Chat chat);
+
+    String uploadImg(MultipartFile img, String username);
 }

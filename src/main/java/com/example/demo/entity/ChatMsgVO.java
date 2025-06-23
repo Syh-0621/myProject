@@ -8,5 +8,9 @@ import lombok.Data;
 public class ChatMsgVO {
     private String MFromUser;
     private String MToUser;
+    private Boolean isImg;
     private String MContent;
+    private String MTime;
+    private Boolean isRead;
+    private Boolean isConfirmed;
 }

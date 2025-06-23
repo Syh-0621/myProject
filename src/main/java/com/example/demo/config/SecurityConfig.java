@@ -25,6 +25,7 @@ public class SecurityConfig {
                     .authorizeHttpRequests((requests) -> {
                         requests.requestMatchers("/code").permitAll();
                         requests.requestMatchers("/register").permitAll();
+                        requests.requestMatchers("/js/**").permitAll();
                         requests.anyRequest().authenticated();
                     })
                     .formLogin((form) -> {

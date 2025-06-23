@@ -3,17 +3,25 @@ package com.example.demo.controller;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.example.demo.entity.ChatMsgVO;
+import com.example.demo.service.ChatMsgService;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @ServerEndpoint("/websocket/{user}")
 public class WebSocketController {
+
+    static ChatMsgService chatMsgService;
+
+    @Autowired
+    public void setChatMsgService(ChatMsgService chatMsgService) {
+        WebSocketController.chatMsgService = chatMsgService;
+    }
 
     private Session WebSocketSession;
 
@@ -41,8 +49,9 @@ public class WebSocketController {
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        JSONObject jsonObject = JSONObject.parseObject(message);
-        sendToUser(jsonObject.toJavaObject(ChatMsgVO.class));
+        ChatMsgVO mes = JSONObject.parseObject(message, ChatMsgVO.class);
+        System.out.println(mes);
+        sendToUser(mes);
     }
 
     @OnError
@@ -54,19 +63,23 @@ public class WebSocketController {
         String toUser = chatMsg.getMToUser();
         String fromUser = chatMsg.getMFromUser();
         String mMsg = chatMsg.getMContent();
+
         System.out.println(fromUser + "发送消息：" + mMsg + "给" + chatMsg.getMToUser());
         System.out.println(webSocketMap);
+        if (!chatMsg.getIsConfirmed()) {
+            chatMsgService.insertChatMsg(chatMsg);
+        } else {
+            chatMsgService.updateChatMsg(chatMsg);
+        }
         try {
             if (webSocketMap.containsKey(fromUser) && webSocketMap.containsKey(toUser)) {
-                webSocketMap.get(fromUser).sendMessage(JSON.toJSONString(chatMsg));
                 webSocketMap.get(toUser).sendMessage(JSON.toJSONString(chatMsg));
             }
             else {
-                webSocketMap.get(fromUser).sendMessage(JSON.toJSONString(chatMsg));
-                webSocketMap.get(fromUser).sendMessage(JSON.toJSONString(new ChatMsgVO("server", fromUser, "对方不在线")));
+                webSocketMap.get(fromUser).sendMessage(JSON.toJSONString(new ChatMsgVO("server", fromUser, false, "对方不在线","",false,false)));
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (Exception ignored) {
+            // ignored
         }
     }
 

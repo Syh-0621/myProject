@@ -11,4 +11,5 @@ public class Chat {
     private String user1;
     private String user2;
     private Integer pid;
+    
 }
