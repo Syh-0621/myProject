@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </head>
 <body>
     <p hidden="hidden" th:text="${product.pid}" id="pid"></p>
@@ -11,8 +11,7 @@
     <h1 th:text="${product.pname}"></h1>
     <p th:text="${product.uname}" id="uname"></p>
     <p th:text="${product.publish}"></p>
-    <p th:text="${product.depict}"></p>
-    <img th:src="${product.image}" alt="" width="200px" height="200px">
+    <p th:text="${product.depict}" id="depict"></p>
     <p th:text="${product.price}"></p>
     <button onclick="addchat()" id="addChat">和他聊聊</button>
     <a th:href="@{/index}">返回首页</a>
@@ -20,15 +19,35 @@
 <script th:inline="javascript" type="text/javascript">
     const user1 = document.getElementById("username").innerText;
     const user2 = document.getElementById("uname").innerText;
-    const pid = document.getElementById("pid").innerText;
+    let pid = document.getElementById("pid").innerText;
     if (user1 === user2) {
         document.getElementById("addChat").style.display = "none";
     }
+    document.addEventListener("DOMContentLoaded", function() {
+        axios.post("/getproduct?pid="+pid, {
+            pid: pid
+        }).then(function ({data}) {
+            let images = data.image;
+            images = images.split(",");
+            let imageContainer = document.createElement("div");
+            imageContainer.style.display = "flex";
+            imageContainer.style.flexWrap = "wrap";
+            images.forEach(image => {
+                const img = document.createElement("img");
+                img.src = image;
+                img.width = 200;
+                img.height = 200;
+                imageContainer.appendChild(img);
+            })
+            document.querySelector("#depict").after(imageContainer);
+        })
+    })
+
     function addchat() {
         axios.post("/chat/add?user1="+user1+"&user2="+user2+"&pid="+pid)
             .then(function (response) {
             if (response.data === "success") {
-                window.location.href = "/chat/"+user1+pid+"/"+user2+pid;
+                window.location.href = "/chat/chatList";
             }
         })
     }

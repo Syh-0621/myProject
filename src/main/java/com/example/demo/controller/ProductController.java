@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -24,17 +26,20 @@ public class ProductController {
     @GetMapping("/")
     public String index1(Model model) {
         model.addAttribute("products", productService.showAllProduct());
+        model.addAttribute("categories", productService.showAllCategory());
         return "index";
     }
 
     @GetMapping("/index")
     public String index(Model model) {
+        model.addAttribute("categories", productService.showAllCategory());
         model.addAttribute("products", productService.showAllProduct());
         return "index";
     }
 
     @GetMapping("/addproduct")
-    public String add() {
+    public String add(Model model) {
+        model.addAttribute("categories", productService.showAllCategory());
         return "addproduct";
     }
 
@@ -47,6 +52,7 @@ public class ProductController {
     @GetMapping("/search")
     public String search(@RequestParam("keyword") String keyword, Model model) {
         model.addAttribute("products", productService.searchProduct(keyword));
+        model.addAttribute("categories", productService.showAllCategory());
         return "index";
     }
 
@@ -63,11 +69,12 @@ public class ProductController {
             return "redirect:/home";
         }
         model.addAttribute("product", productService.showProductById(id));
+        model.addAttribute("categories", productService.showAllCategory());
         return "editproduct";
     }
 
     @PostMapping("/editproduct")
-    public String edit(Product product, @RequestParam(value = "file", required = false) MultipartFile images, Authentication authentication) {
+    public String edit(Product product, @RequestParam(value = "file", required = false) MultipartFile[] images, Authentication authentication) {
         productService.editProduct(product, images, authentication.getName());
         return "redirect:/home";
     }
@@ -85,5 +92,18 @@ public class ProductController {
     @ResponseBody
     public String getproduct(@RequestParam("pid") int pid) {
         return JSON.toJSONString(productService.showProductById(pid));
+    }
+
+    @PostMapping("/getproducts")
+    @ResponseBody
+    public String getproducts() {
+        return JSON.toJSONString(productService.showAllProduct());
+    }
+
+    @GetMapping("/category")
+    public String category(@RequestParam("category") String category, Model model) {
+        model.addAttribute("products", productService.showProductByCategory(category));
+        model.addAttribute("categories", productService.showAllCategory());
+        return "index";
     }
 }

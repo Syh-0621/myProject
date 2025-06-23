@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.Product;
 import com.example.demo.mapper.ProductMapper;
 import com.example.demo.service.ProductService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductMapper productMapper;
+
+    @Getter
+    private static final List<String> categories = new ArrayList<String>() {{
+        add("电子产品");
+        add("生活用品");
+        add("运动器材");
+        add("书籍");
+        add("学习用品");
+        add("化妆品");
+        add("服装");
+        add("食品");
+        add("其他");
+    }};
 
     @Override
     public List<Product> showAllProduct() {
@@ -68,11 +82,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean deleteImages(Product product){
         String imgpath = showProductById(product.getPid()).getImage();
-        if (imgpath == null || imgpath.equals(""))
+        if (imgpath == null || imgpath.isEmpty())
             return true;
-        File file = new File("/home/syh/Pictures/img/" + imgpath.substring(8));
-        if (file.exists())
-            return file.delete();
+        String[] imgpaths = imgpath.split(",");
+        for (String path : imgpaths) {
+            File file = new File("/home/syh/Pictures/img/" + path.substring(8));
+            if (file.exists())
+                return file.delete();
+        }
         return false;
     }
 
@@ -102,12 +119,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String editProduct(Product product, MultipartFile images, String username){
+    public String editProduct(Product product, MultipartFile[] images, String username){
         String imgpath = null;
-        log.info(String.valueOf(images.isEmpty()));
-        if (!images.isEmpty()) {
+        if (!images[0].isEmpty()) {
             deleteImages(product);
-//            imgpath = uploadImages(images, username);
+            imgpath = uploadImages(images, username);
         }
         else {
             imgpath = showProductById(product.getPid()).getImage();
@@ -122,5 +138,15 @@ public class ProductServiceImpl implements ProductService {
     public int deleteProduct(int id){
         deleteImages(productMapper.selectProductById(id));
         return productMapper.deleteProductById(id);
+    }
+
+    @Override
+    public List<Product> showProductByCategory(String category){
+        return productMapper.selectProductByCategory(category);
+    }
+
+    @Override
+    public List<String> showAllCategory() {
+        return categories;
     }
 }

@@ -17,4 +17,5 @@ public class Product {
     String image;
     Double price;
     Date publish;
+    String category;
 }

@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
 </head>
 <body>
     <h1>我的主页</h1>
@@ -11,12 +13,40 @@
     <a href="/doLogout">退出登录</a>
     <p>我发布的商品：</p>
     <div th:each="product : ${products}">
-        <h2 th:text="${product.pname}"></h2>
-        <img th:src="${product.image}" alt="" width="200px" height="200px">
+        <p th:text="${product.pname}"></p>
+        <p th:text="${product.uname}"></p>
+        <p th:text="${product.publish}"></p>
+        <p th:text="${product.depict}"></p>
+        <p th:text="${product.pid}" hidden="hidden" id="pid"></p>
         <p th:text="${product.price}"></p>
         <a th:href="@{/product/{id}(id=${product.pid})}">查看详情</a><br>
         <a th:href="@{/editproduct/{id}(id=${product.pid})}">编辑商品</a><br>
         <a th:href="@{/deleteproduct/{id}(id=${product.pid})}">删除商品</a><br>
     </div>
 </body>
+<script>
+    let pids = document.querySelectorAll("#pid");
+    document.addEventListener("DOMContentLoaded", function() {
+        pids.forEach(function (pidEle) {
+            pid = pidEle.innerText;
+            axios.post("/getproduct?pid="+pid, {
+                "pid": pid
+            }).then(function ({data}) {
+                let images = data.image;
+                images = images.split(",");
+                let imageContainer = document.createElement("div");
+                imageContainer.style.display = "flex";
+                imageContainer.style.flexWrap = "wrap";
+                images.forEach(image => {
+                    const img = document.createElement("img");
+                    img.src = image;
+                    img.width = 200;
+                    img.height = 200;
+                    imageContainer.appendChild(img);
+                })
+                pidEle.after(imageContainer);
+            })
+        })
+    })
+</script>
 </html>

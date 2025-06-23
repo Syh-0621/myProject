@@ -29,15 +29,18 @@ public interface ProductMapper {
     @Select("select * from product where pid = #{pid}")
     Product selectProductById(int pid);
 
-    @Insert("insert into product(uname, pname, depict, image, price, publish) values(#{uname}, #{pname}, #{depict}, #{image}, #{price}, NOW())")
+    @Insert("insert into product(uname, pname, depict, image, price, publish, category) values(#{uname}, #{pname}, #{depict}, #{image}, #{price}, NOW(), #{category})")
     int insertProduct(Product product);
 
     @Select("select * from product where uname = #{uname}")
     List<Product> selectProductByUname(String uname);
 
-    @Update("update product set pname = #{pname}, depict = #{depict}, image = #{image}, price = #{price} where pid = #{pid}")
+    @Update("update product set pname = #{pname}, depict = #{depict}, image = #{image}, price = #{price}, category = #{category} where pid = #{pid}")
     int updateProduct(Product product);
 
     @Update("delete from product where pid = #{pid}")
     int deleteProductById(int pid);
+
+    @Select("select * from product where category = #{category}")
+    List<Product> selectProductByCategory(String category);
 }

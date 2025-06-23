@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </head>
 <body>
     <form action="/editproduct" method="post" enctype="multipart/form-data">
@@ -12,7 +13,9 @@
         <label for="depict">商品描述：</label>
         <input type="text" name="depict" id="depict" th:value="${product.depict}"><br>
         <label for="file">商品图片：</label>
-        <input type="file" name="file" id="file"><br>
+        <input type="file" name="file" id="file" multiple><br>
+        <label for="category">商品类别：</label>
+        <input type="radio" th:each="category:${categories}" th:text="${category}" th:value="${category}" name="category" id="category"><br>
         <label for="price">商品价格：</label>
         <input type="text" name="price" id="price" th:value="${product.price}"><br>
         <input type="submit" value="保存">
