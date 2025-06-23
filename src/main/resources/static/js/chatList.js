@@ -1,6 +1,50 @@
+document.addEventListener("DOMContentLoaded", function () {
+    // 获取当前用户
+    let fromUserAlert = document.getElementById("FromUser").innerText;
+    fromUserAlert = fromUserAlert.slice(0, fromUserAlert.indexOf("@"));
+    let alertSocket = new WebSocket("ws://localhost:8080/websocket/" + fromUserAlert);
+
+    document.querySelectorAll("#ToUser").forEach(user=>{
+        axios.post("/chat/unread", {
+            "fromUser": user.previousElementSibling.innerText,
+            "toUser": user.innerText
+        }).then(({data})=>{
+            if (data > 0) {
+                user.parentElement.children[0].children[1].children[2].innerText = data;
+                user.parentElement.children[0].children[1].children[2].style.display = "block";
+            }
+        })
+        axios.post("/chat/history", {
+            "fromUser": user.previousElementSibling.innerText,
+            "toUser": user.innerText
+        }).then(({data})=>{
+            const lastMes = data[data.length - 1]
+            user.parentElement.children[0].children[1].children[1].innerText = lastMes.MContent;
+        })
+    })
+
+    alertSocket.onopen = function (event) {
+        console.log("连接成功");
+    }
+
+    alertSocket.onmessage = function (event) {
+        let msg = JSON.parse(event.data);
+        console.log("收到消息：" + msg);
+        // 这里的alertUser是发送消息的用户
+        const alertUser = msg.MFromUser;
+        const alertUserEle = document.querySelector("div#ToUser[text=" + alertUser + "]");
+        console.log(alertUserEle);
+        alertUserEle.nextElementSibling.innerText = parseInt(alertUserEle.nextElementSibling.innerText) + 1;
+        alertUserEle.nextElementSibling.style.display = "block";
+    }
+})
+
 document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener("click", function () {
     let toUser = this.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
     let fromUser = this.nextElementSibling.nextElementSibling.innerText;
+    let pid = this.nextElementSibling.innerText;
+    let alertNumEle = this.parentElement.children[0].children[1].children[2];
+    let lastMesEle = this.parentElement.children[0].children[1].children[1];
     let socket = new WebSocket("ws://localhost:8080/websocket/" + fromUser);
     const chatBox = document.getElementById("chatBox");
     chatBox.style.display = "block";
@@ -26,6 +70,8 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
 
     socket.onopen = function (event) {
         console.log("连接成功");
+        alertNumEle.innerText = 0;
+        alertNumEle.style.display = "none";
         sendText(false, "", true);
     }
 
@@ -43,6 +89,7 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
         sendText(false, "", true);
         msg.isRead = true;
         addMessageElement(msg);
+        lastMesEle.innerText = msg.MContent
     }
 
     socket.onclose = function (ev) {
@@ -63,6 +110,7 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
             "isRead": false,
             "isConfirmed": false
         })
+        lastMesEle.innerText = content;
     }
 
     imgBtn.onchange = function () {

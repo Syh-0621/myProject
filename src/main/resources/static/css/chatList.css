@@ -116,3 +116,35 @@
 .message.sent .message-status {
     right: -20px;
 }
+
+div.notification-bubble {
+    /* 基础样式 */
+    position: relative;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    margin: 8;
+
+    /* 简约视觉 */
+    background-color: #ff4d4f; /* 红色背景 */
+    color: white;
+    border-radius: 10px;
+
+    /* 文字样式 */
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: center;
+
+    /* 布局 */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+}
+
+/* 可选悬停微效果 */
+div.notification-bubble:hover {
+    opacity: 0.9;
+}

@@ -13,4 +13,5 @@ public interface ChatService {
     int addChat(Chat chat);
 
     String uploadImg(MultipartFile img, String username);
+
 }

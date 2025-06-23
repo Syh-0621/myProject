@@ -28,4 +28,15 @@ public class ChatMsgServiceImpl implements ChatMsgService {
     public int updateChatMsg(ChatMsgVO chatMsg){
         return chatMsgMapper.update(chatMsg);
     }
+
+    @Override
+    public Integer getUnreadCount(String MFromUser, String MToUser) {
+        Integer unreadCount = 0;
+        for (ChatMsgVO chatMsgVO : selectChatMsgByUser(MFromUser, MToUser)) {
+            if(!chatMsgVO.getIsRead() && chatMsgVO.getMFromUser().equals(MToUser)){
+                unreadCount++;
+            }
+        }
+        return unreadCount;
+    }
 }

@@ -2,8 +2,10 @@ package com.example.demo.controller;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.example.demo.entity.Chat;
 import com.example.demo.entity.ChatMsgVO;
 import com.example.demo.service.ChatMsgService;
+import com.example.demo.service.ChatService;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
@@ -21,6 +23,13 @@ public class WebSocketController {
     @Autowired
     public void setChatMsgService(ChatMsgService chatMsgService) {
         WebSocketController.chatMsgService = chatMsgService;
+    }
+
+    static ChatService chatService;
+
+    @Autowired
+    public void setChatService(ChatService chatService) {
+        WebSocketController.chatService = chatService;
     }
 
     private Session WebSocketSession;
@@ -61,6 +70,8 @@ public class WebSocketController {
 
     public void sendToUser(ChatMsgVO chatMsg) {
         String toUser = chatMsg.getMToUser();
+        String toUserAlert = toUser.substring(0, toUser.indexOf("@"));
+        Integer pid = Integer.valueOf(toUser.substring(toUser.indexOf("@Pid=") + 5));
         String fromUser = chatMsg.getMFromUser();
         String mMsg = chatMsg.getMContent();
 
@@ -76,6 +87,9 @@ public class WebSocketController {
                 webSocketMap.get(toUser).sendMessage(JSON.toJSONString(chatMsg));
             }
             else {
+                if (webSocketMap.containsKey(toUserAlert)){
+                    webSocketMap.get(toUserAlert).sendMessage(JSON.toJSONString(new ChatMsgVO(fromUser, toUser, false, "", null,true,false)));
+                }
                 webSocketMap.get(fromUser).sendMessage(JSON.toJSONString(new ChatMsgVO("server", fromUser, false, "对方不在线","",false,false)));
             }
         } catch (Exception ignored) {

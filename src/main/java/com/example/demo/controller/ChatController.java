@@ -73,4 +73,10 @@ public class ChatController {
         System.out.println(JSON.toJSONString(chatMsgService.selectChatMsgByUser(jsonObject.getString("fromUser"), jsonObject.getString("toUser"))));
         return JSON.toJSONString(chatMsgService.selectChatMsgByUser(jsonObject.getString("fromUser"), jsonObject.getString("toUser")));
     }
+
+    @PostMapping("/unread")
+    @ResponseBody
+    public Integer unread(@RequestBody JSONObject jsonObject) {
+        return chatMsgService.getUnreadCount(jsonObject.getString("fromUser"), jsonObject.getString("toUser"));
+    }
 }
