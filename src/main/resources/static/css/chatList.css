@@ -148,3 +148,43 @@ div.notification-bubble {
 div.notification-bubble:hover {
     opacity: 0.9;
 }
+
+#contextMenu {
+    background: #fff;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 160px;
+    padding: 6px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+#contextMenu > div {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+#contextMenu > div:last-child {
+    border-bottom: none;
+}
+
+#contextMenu a {
+    display: block;
+    padding: 8px 16px;
+    color: #24292e;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#contextMenu a:hover {
+    background-color: #f6f8fa;
+    color: #0366d6;
+}
+
+#contextMenu a:active {
+    background-color: #ebf0f4;
+}

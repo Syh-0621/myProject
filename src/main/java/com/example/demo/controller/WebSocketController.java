@@ -50,7 +50,7 @@ public class WebSocketController {
 
     @OnClose
     public void onClose() {
-        if (!user.equals("")) {
+        if (!user.isEmpty()) {
             webSocketMap.remove(user);
             subOnlineCount();
         }
@@ -88,7 +88,8 @@ public class WebSocketController {
             }
             else {
                 if (webSocketMap.containsKey(toUserAlert)){
-                    webSocketMap.get(toUserAlert).sendMessage(JSON.toJSONString(new ChatMsgVO(fromUser, toUser, false, "", null,true,false)));
+                    System.out.println("alert " + toUserAlert);
+                    webSocketMap.get(toUserAlert).sendMessage(JSON.toJSONString(new ChatMsgVO(fromUser, toUser, false, chatMsg.getMContent(), "",true,false)));
                 }
                 webSocketMap.get(fromUser).sendMessage(JSON.toJSONString(new ChatMsgVO("server", fromUser, false, "对方不在线","",false,false)));
             }

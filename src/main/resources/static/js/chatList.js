@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 获取当前用户
     let fromUserAlert = document.getElementById("FromUser").innerText;
     fromUserAlert = fromUserAlert.slice(0, fromUserAlert.indexOf("@"));
-    let alertSocket = new WebSocket("ws://localhost:8080/websocket/" + fromUserAlert);
+    let alertSocket = new WebSocket("wss://syh0621.xyz/websocket/" + fromUserAlert);
 
     document.querySelectorAll("#ToUser").forEach(user=>{
         axios.post("/chat/unread", {
@@ -18,8 +18,13 @@ document.addEventListener("DOMContentLoaded", function () {
             "fromUser": user.previousElementSibling.innerText,
             "toUser": user.innerText
         }).then(({data})=>{
-            const lastMes = data[data.length - 1]
+            console.log(data)
+            const lastMes = data[data.length - 1];
+            //最后一条信息
             user.parentElement.children[0].children[1].children[1].innerText = lastMes.MContent;
+            if (lastMes.isImg) {
+                user.parentElement.children[0].children[1].children[1].innerHTML = "[图片]";
+            }
         })
     })
 
@@ -27,15 +32,22 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("连接成功");
     }
 
-    alertSocket.onmessage = function (event) {
-        let msg = JSON.parse(event.data);
-        console.log("收到消息：" + msg);
+    alertSocket.onmessage = function ({data}) {
+        console.log("收到消息：" + data);
         // 这里的alertUser是发送消息的用户
-        const alertUser = msg.MFromUser;
-        const alertUserEle = document.querySelector("div#ToUser[text=" + alertUser + "]");
-        console.log(alertUserEle);
-        alertUserEle.nextElementSibling.innerText = parseInt(alertUserEle.nextElementSibling.innerText) + 1;
-        alertUserEle.nextElementSibling.style.display = "block";
+        const alertUser = JSON.parse(data).MFromUser;
+        console.log(alertUser);
+        const alertUserEle = Array.from(document.querySelectorAll("p#ToUser")).find(ele => ele.textContent === `${alertUser}`);
+        console.log(alertUserEle)
+        if (alertUserEle) {
+            alertUserEle.parentElement.children[0].children[1].children[2].innerText = parseInt(alertUserEle.parentElement.children[0].children[1].children[2].innerText) + 1;
+            alertUserEle.parentElement.children[0].children[1].children[1].innerText = JSON.parse(data).MContent;
+            alertUserEle.parentElement.children[0].children[1].children[2].style.display = "block";
+        }
+    }
+
+    alertSocket.onerror = function (e) {
+        console.log(e);
     }
 })
 
@@ -45,13 +57,16 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
     let pid = this.nextElementSibling.innerText;
     let alertNumEle = this.parentElement.children[0].children[1].children[2];
     let lastMesEle = this.parentElement.children[0].children[1].children[1];
-    let socket = new WebSocket("ws://localhost:8080/websocket/" + fromUser);
+    let socket = new WebSocket("wss://syh0621.xyz/websocket/" + fromUser);
     const chatBox = document.getElementById("chatBox");
     chatBox.style.display = "block";
     document.getElementById("msg").innerText = "";
     document.getElementById("noChatSelected").style.display = "none";
     document.getElementById("chatTitle").innerText = toUser;
 
+    socket.onerror = function (e) {
+        console.log(e);
+    }
 
     const sendBtn = document.getElementById("send");
     const imgBtn = document.getElementById("img");
@@ -111,6 +126,7 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
             "isConfirmed": false
         })
         lastMesEle.innerText = content;
+        document.getElementById("msgContent").value = "";
     }
 
     imgBtn.onchange = function () {
@@ -284,6 +300,23 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
             messageElement.style.opacity = "1";
             messageElement.style.transform = "translateY(0)";
         }, 10);
+
+        // 滚动到最新消息
+        document.getElementById("chatBox").scrollTo(0,document.getElementById("chatBox").scrollHeight);
     }
 
 }))
+
+document.querySelectorAll("div#productInfo").forEach(div => {
+    div.addEventListener("contextmenu", function(e) {
+        e.preventDefault();
+        const menu = document.getElementById("contextMenu");
+        menu.children[0].children[0].href = `/product/${this.nextElementSibling.innerText}`;
+        menu.style.left = `${e.pageX}px`;
+        menu.style.top = `${e.pageY}px`;
+        menu.style.display = "block";
+    });
+    document.addEventListener('click', function() {
+        document.getElementById("contextMenu").style.display = "none";
+    })
+})
