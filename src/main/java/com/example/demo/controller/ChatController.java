@@ -34,21 +34,6 @@ public class ChatController {
         return "chatList";
     }
 
-    @GetMapping("/{fromUser}/{toUser}")
-    public String chat(@PathVariable String fromUser, @PathVariable String toUser, Model model, Authentication authentication) {
-        /* 这是实际情况，但为了测试注释掉
-        if(fromUser.equals(authentication.getName())) {
-            model.addAttribute("fromUser",fromUser);
-            model.addAttribute("toUser",toUser);
-            return "chat";
-        }
-        return "redirect:/chat/chatList";
-         */
-        model.addAttribute("fromUser",fromUser);
-        model.addAttribute("toUser",toUser);
-        return "chat";
-    }
-
     @PostMapping("/add")
     @ResponseBody
     public String addChat(Chat chat) {

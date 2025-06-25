@@ -5,10 +5,14 @@
     <title>Title</title>
 </head>
 <body>
+    <a th:href="@{/home}">我的</a>
+    <a th:href="@{/addproduct}">发布</a>
+    <a th:href="@{/chat/chatList}">聊天</a>
+    <a th:href="@{/index}">首页</a>
     <form action="/addproduct" method="post" enctype="multipart/form-data">
         商品名称：<input type="text" name="pname" placeholder="商品名称"><br>
         商品描述：<input type="text" name="depict" placeholder="商品描述"><br>
-        商品图片：<input type="file" name="file" multiple><br>
+        商品图片：<input type="file" name="file" accept="image/gif, image/jpeg, image/png, image/jpg" multiple><br>
         商品分类：<input type="radio" th:each="category:${categories}" th:text="${category}" th:value="${category}" name="category"><br>
         商品价格：<input type="text" name="price" placeholder="商品价格"><br>
         <input type="submit" value="添加">

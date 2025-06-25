@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://cdn.bootcdn.net/ajax/libs/axios/1.9.0/axios.js"></script>    <style>
+    <title>查看他人信息</title>
+    <style>
         .avatar {
             width: 100px;
             height: 100px;
@@ -42,24 +42,18 @@
     <a th:href="@{/addproduct}">发布</a>
     <a th:href="@{/chat/chatList}">聊天</a>
     <a th:href="@{/index}">首页</a>
-    <h1>我的主页</h1>
     <div>
         <p th:text="${user.nickname}"></p>
         <p th:text="${user.username}"></p>
         <img th:src="@{${user.profilePicture}}" alt="头像" class="avatar">
         <p th:text="${user.email}"></p>
     </div>
-    <a href="/editUser">编辑个人信息</a>
-    <a href="/doLogout">退出登录</a>
-    <h1>我发布的商品：</h1>
-    <div th:each="product : ${products}">
+    <h1>他发布的商品：</h1>
+    <div th:each="product:${products}" id="products">
+        <img th:src="${product.image.split(',')[0]}" alt="" width="200px" height="200px">
         <h2 th:text="${product.pname}"></h2>
-        <p th:text="${product.pid}" hidden="hidden" id="pid"></p>
         <p th:text="${product.price}"></p>
-        <a th:href="@{/product/{id}(id=${product.pid})}">查看详情</a><br>
-        <a th:href="@{/editproduct/{id}(id=${product.pid})}">编辑商品</a><br>
-        <a th:href="@{/deleteproduct/{id}(id=${product.pid})}">删除商品</a><br>
+        <a th:href="@{/product/{pid}(pid=${product.pid})}">查看详情</a><br>
     </div>
 </body>
-<script src="/js/home.js"></script>
 </html>

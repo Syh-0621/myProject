@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>聊天中心</title>
     <link rel="stylesheet" href="/css/chatList.css">
-    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/1.9.0/axios.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -205,20 +205,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .received {
-            align-self: flex-start;
-            background-color: white;
-            border: 1px solid var(--gray-light);
-            border-bottom-left-radius: 5px;
-        }
-
-        .sent {
-            align-self: flex-end;
-            background-color: var(--primary-color);
-            color: white;
-            border-bottom-right-radius: 5px;
-        }
-
         .message-time {
             font-size: 0.7rem;
             opacity: 0.7;
@@ -367,8 +353,8 @@
     </div>
 
     <div class="nav-links">
-        <a href="/home"><i class="fas fa-home"></i> 我的主页</a>
-        <a href="/"><i class="fas fa-shopping-bag"></i> 商品列表</a>
+        <a href="/home"><i class="fas fa-home"></i> 我的</a>
+        <a href="/index"><i class="fas fa-shopping-bag"></i> 主页</a>
     </div>
 
     <div class="chat-list">
@@ -414,7 +400,7 @@
             <label for="img" class="btn btn-icon" id="imgBtn">
                 <i class="fas fa-image"></i>
             </label>
-            <input type="file" id="img" style="display: none">
+            <input type="file" id="img" style="display: none" accept="image/gif, image/jpeg, image/png, image/jpg">
             <button class="btn btn-primary" id="send">
                 <i class="fas fa-paper-plane"></i> 发送
             </button>
@@ -438,7 +424,12 @@
                 const productInfo = pid.parentNode.children[0];
                 const imgEle = productInfo.children[0];
                 const detailEle = productInfo.children[1];
-                detailEle.children[0].textContent = data.pname;
+                // detailEle.children[0].textContent = data.pname;
+                const toUser = pid.nextElementSibling.nextElementSibling.innerText;
+                axios.post(`/getUser?username=${toUser.substring(0,toUser.indexOf('@'))}`).then(({data})=>{
+                    console.log(data)
+                    detailEle.children[0].textContent = data.nickname;
+                });
                 imgEle.src = data.image;
             })
         })

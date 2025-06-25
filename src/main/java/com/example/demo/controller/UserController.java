@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.example.demo.entity.Account;
 import com.example.demo.service.ProductService;
 import com.example.demo.service.UserService;
@@ -9,15 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Objects;
 import java.util.Random;
 
 @Slf4j
@@ -46,7 +44,6 @@ public class UserController {
     @PostMapping("/code")
     @ResponseBody
     public String code(HttpSession httpSession, @RequestParam("email") String email) {
-        log.info("1111");
         if (email == null) {
             return "发送失败！";
         }
@@ -70,10 +67,15 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseBody
-    public String register(Account user, String code, HttpSession httpSession) {
+    public String register(Account user,
+                           @RequestParam("code") String code,
+                           HttpSession httpSession,
+                           MultipartFile[] profilePicture1) {
         Integer realCode = (Integer) httpSession.getAttribute("code");
-        if (realCode != null && realCode.equals(Integer.parseInt(code))) {
-            if (userService.register(user) > 0) {
+        System.out.println(code);
+        System.out.println(user);
+        if (realCode != null && realCode == Integer.parseInt(code)) {
+            if (userService.register(user, profilePicture1) > 0) {
                 return "register access";
             }
             else {
@@ -91,7 +93,39 @@ public class UserController {
 
     @GetMapping("/home")
     public String home(Authentication authentication, Model model) {
+        model.addAttribute("user", userService.SelectUserByUsername(authentication.getName()));
         model.addAttribute("products", productService.showMyProduct(authentication.getName()));
         return "home";
+    }
+
+    @PostMapping("/getUser")
+    @ResponseBody
+    public String getUser(String username) {
+        return JSON.toJSONString(userService.SelectUserByUsername(username));
+    }
+
+    @GetMapping("/editUser")
+    public String editUser(Authentication authentication, Model model) {
+        model.addAttribute("user", userService.SelectUserByUsername(authentication.getName()));
+        return "edituser";
+    }
+
+    @PostMapping("/editUser")
+    @ResponseBody
+    public String editUser(Account user, MultipartFile[] profilePicture1) {
+        if (userService.editUser(user, profilePicture1) > 0) {
+            return "success";
+        }
+        return "failed";
+    }
+
+    @GetMapping("/user/{username}")
+    public String user(@PathVariable("username") String username, Model model, Authentication authentication) {
+        if (Objects.equals(authentication.getName(), username)){
+            return "redirect:/home";
+        }
+        model.addAttribute("user", userService.SelectUserByUsername(username));
+        model.addAttribute("products", productService.showMyProduct(username));
+        return "userinfo";
     }
 }

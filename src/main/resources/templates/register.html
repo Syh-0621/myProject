@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>校园二手交易平台 - 注册</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -15,91 +15,170 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+            background: linear-gradient(135deg, #e8f4ff 0%, #d5e9ff 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 装饰背景元素 */
+        .decoration {
+            position: absolute;
+            z-index: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(106, 147, 203, 0.08) 0%, rgba(164, 191, 239, 0.06) 100%);
+            animation: float 8s infinite ease-in-out;
+        }
+
+        .decoration:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 10%;
+        }
+
+        .decoration:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            bottom: 15%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .decoration:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            top: 25%;
+            right: 20%;
+            animation-delay: 4s;
+        }
+
+        .decoration:nth-child(4) {
+            width: 80px;
+            height: 80px;
+            bottom: 25%;
+            left: 20%;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-20px) translateX(10px); }
+            50% { transform: translateY(10px) translateX(-15px); }
+            75% { transform: translateY(-15px) translateX(-10px); }
         }
 
         .container {
             width: 100%;
-            max-width: 460px;
-            background: rgba(255, 255, 255, 0.95);
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.98);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 12px 30px rgba(100, 149, 237, 0.15);
-            padding: 40px;
+            box-shadow: 0 15px 40px rgba(100, 149, 237, 0.18);
+            padding: 45px 40px;
             position: relative;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
+            z-index: 10;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            transform: translateY(0);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(100, 149, 237, 0.25);
         }
 
         .header {
             text-align: center;
             margin-bottom: 35px;
+            position: relative;
         }
 
         .logo {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .logo-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #6a93cb 0%, #a4bfef 100%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #5d9cec 0%, #3a7bd5 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 12px;
-            box-shadow: 0 4px 10px rgba(106, 147, 203, 0.25);
+            margin-right: 15px;
+            box-shadow: 0 6px 15px rgba(93, 156, 236, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-icon:hover {
+            transform: scale(1.05) rotate(5deg);
         }
 
         .logo-icon i {
-            font-size: 24px;
+            font-size: 28px;
             color: white;
         }
 
         .logo-text {
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 32px;
+            font-weight: 800;
             color: #2c3e50;
             letter-spacing: 0.5px;
-        }
-
-        .logo-text span {
-            color: #5d9cec;
+            background: linear-gradient(135deg, #4a6fa5, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .header h2 {
-            color: #4a6fa5;
-            font-size: 24px;
-            margin: 10px 0 8px;
-            font-weight: 600;
+            color: #3a7bd5;
+            font-size: 26px;
+            margin: 15px 0 10px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
         }
 
         .header p {
-            color: #7f8c8d;
-            font-size: 15px;
+            color: #6c7a89;
+            font-size: 16px;
+            line-height: 1.5;
+            max-width: 320px;
+            margin: 0 auto;
         }
 
         .form-group {
-            margin-bottom: 22px;
+            margin-bottom: 25px;
             position: relative;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 9px;
             color: #4a6583;
-            font-weight: 500;
-            font-size: 14px;
-            padding-left: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            padding-left: 10px;
+            position: relative;
+        }
+
+        .form-group label:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 16px;
+            background: #5d9cec;
+            border-radius: 2px;
         }
 
         .input-with-icon {
@@ -108,28 +187,31 @@
 
         .input-with-icon i {
             position: absolute;
-            left: 18px;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
-            color: #6a93cb;
+            color: #5d9cec;
             font-size: 18px;
+            transition: color 0.3s;
         }
 
         .form-control {
             width: 100%;
-            padding: 16px 20px 16px 52px;
+            padding: 16px 20px 16px 55px;
             border: 2px solid #e4edf9;
             border-radius: 14px;
             font-size: 16px;
             transition: all 0.3s ease;
             background: #f8fbff;
             color: #4a6583;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
         }
 
         .form-control:focus {
             outline: none;
             border-color: #8ab6f9;
-            box-shadow: 0 0 0 3px rgba(138, 182, 249, 0.2);
+            box-shadow: 0 0 0 4px rgba(138, 182, 249, 0.25);
+            background: #ffffff;
         }
 
         .form-control::placeholder {
@@ -147,23 +229,31 @@
         }
 
         .verification-group .btn-send {
-            background: linear-gradient(to right, #6a93cb, #8ab6f9);
+            background: linear-gradient(to right, #5d9cec, #4a89dc);
             border: none;
             border-radius: 14px;
             color: white;
             padding: 0 22px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             min-width: 140px;
-            box-shadow: 0 4px 12px rgba(106, 147, 203, 0.25);
+            box-shadow: 0 5px 15px rgba(93, 156, 236, 0.3);
             font-size: 15px;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .verification-group .btn-send:hover {
-            background: linear-gradient(to right, #5d84b8, #7aa5e6);
+            background: linear-gradient(to right, #4a89dc, #3a7bd5);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(106, 147, 203, 0.35);
+            box-shadow: 0 7px 18px rgba(93, 156, 236, 0.4);
+        }
+
+        .verification-group .btn-send:active {
+            transform: translateY(1px);
         }
 
         .password-container {
@@ -172,148 +262,305 @@
 
         .toggle-password {
             position: absolute;
-            right: 18px;
+            right: 20px;
             top: 50%;
             transform: translateY(-50%);
             color: #6a93cb;
             cursor: pointer;
             font-size: 18px;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: #4a89dc;
         }
 
         .btn-register {
             width: 100%;
-            padding: 17px;
-            background: linear-gradient(to right, #6a93cb, #8ab6f9);
+            padding: 18px;
+            background: linear-gradient(to right, #5d9cec, #3a7bd5);
             border: none;
             border-radius: 14px;
             color: white;
             font-size: 17px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(106, 147, 203, 0.3);
-            margin-top: 10px;
+            box-shadow: 0 7px 18px rgba(93, 156, 236, 0.35);
+            margin-top: 15px;
             letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-register:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.6s;
+        }
+
+        .btn-register:hover:after {
+            left: 100%;
         }
 
         .btn-register:hover {
-            background: linear-gradient(to right, #5d84b8, #7aa5e6);
+            background: linear-gradient(to right, #4a89dc, #3068c1);
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(106, 147, 203, 0.4);
+            box-shadow: 0 10px 25px rgba(93, 156, 236, 0.45);
+        }
+
+        .btn-register:active {
+            transform: translateY(1px);
+            box-shadow: 0 5px 15px rgba(93, 156, 236, 0.4);
         }
 
         .login-link {
             text-align: center;
-            margin-top: 28px;
-            color: #7f8c8d;
+            margin-top: 30px;
+            color: #6c7a89;
             font-size: 15px;
+            font-weight: 500;
         }
 
         .login-link a {
-            color: #5d9cec;
+            color: #4a89dc;
             text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
+            font-weight: 600;
+            transition: all 0.3s;
             margin-left: 6px;
+            position: relative;
+        }
+
+        .login-link a:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #4a89dc;
+            transition: width 0.3s ease;
         }
 
         .login-link a:hover {
-            color: #4a89dc;
-            text-decoration: underline;
+            color: #3a7bd5;
+        }
+
+        .login-link a:hover:after {
+            width: 100%;
         }
 
         .terms {
             display: flex;
             align-items: flex-start;
-            margin: 20px 0;
+            margin: 25px 0 15px;
+            background: #f8fbff;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #e4edf9;
         }
 
         .terms input {
             margin-top: 5px;
             margin-right: 12px;
-            accent-color: #6a93cb;
+            accent-color: #5d9cec;
+            cursor: pointer;
         }
 
         .terms label {
             font-size: 14px;
-            color: #7f8c8d;
-            line-height: 1.5;
+            color: #6c7a89;
+            line-height: 1.6;
+            cursor: pointer;
+            font-weight: 500;
         }
 
         .terms a {
-            color: #5d9cec;
+            color: #4a89dc;
             text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
         }
 
         .terms a:hover {
+            color: #3a7bd5;
             text-decoration: underline;
         }
 
         .password-strength {
-            margin-top: 10px;
+            margin-top: 12px;
             display: flex;
             gap: 6px;
         }
 
         .strength-bar {
-            height: 5px;
+            height: 6px;
             border-radius: 3px;
             background: #e4edf9;
             flex: 1;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
         }
 
         .strength-text {
             font-size: 13px;
-            color: #7f8c8d;
-            margin-top: 5px;
+            margin-top: 8px;
             text-align: right;
+            font-weight: 600;
         }
 
-        .decoration {
+        .custom-input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .custom-input-group label {
+            display: block;
+            margin-bottom: 9px;
+            color: #4a6583;
+            font-weight: 600;
+            font-size: 15px;
+            padding-left: 10px;
+            position: relative;
+        }
+
+        .custom-input-group label:after {
+            content: '';
             position: absolute;
-            z-index: -1;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 16px;
+            background: #5d9cec;
+            border-radius: 2px;
         }
 
-        .decoration.circle1 {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #e6f0ff 0%, #d5e5ff 100%);
-            top: -80px;
-            right: -80px;
+        .custom-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e4edf9;
+            border-radius: 14px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8fbff;
+            color: #4a6583;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
         }
 
-        .decoration.circle2 {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #e6f0ff 0%, #d5e5ff 100%);
-            bottom: -60px;
-            left: -60px;
+        .custom-input:focus {
+            outline: none;
+            border-color: #8ab6f9;
+            box-shadow: 0 0 0 4px rgba(138, 182, 249, 0.25);
+            background: #ffffff;
         }
 
-        .decoration-item {
+        .custom-input::placeholder {
+            color: #a6b9d0;
+            font-weight: 400;
+        }
+
+        .file-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .file-input-container input[type="file"] {
             position: absolute;
-            color: rgba(212, 228, 255, 0.7);
-            font-size: 24px;
-            z-index: -1;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
         }
 
-        .decoration-item.book {
-            top: 30px;
-            left: 30px;
+        .file-input-label {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px dashed #e4edf9;
+            border-radius: 14px;
+            background: #f8fbff;
+            color: #a6b9d0;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s;
         }
 
-        .decoration-item.laptop {
-            bottom: 40px;
-            right: 40px;
-            transform: rotate(15deg);
+        .file-input-label:hover {
+            border-color: #8ab6f9;
+            background: #f0f7ff;
         }
 
+        .file-input-icon {
+            color: #5d9cec;
+            font-size: 18px;
+            margin-right: 12px;
+        }
+
+        .file-input-text {
+            flex: 1;
+        }
+
+        .file-input-button {
+            background: #f0f7ff;
+            border: 1px solid #d5e5ff;
+            border-radius: 10px;
+            padding: 8px 15px;
+            color: #5d9cec;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .file-input-container:hover .file-input-button {
+            background: #e4edf9;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header, .custom-input-group, .form-group, .terms, .btn-register, .login-link {
+            animation: fadeIn 0.6s forwards;
+        }
+
+        .custom-input-group { animation-delay: 0.1s; }
+        .form-group:nth-child(1) { animation-delay: 0.2s; }
+        .form-group:nth-child(2) { animation-delay: 0.3s; }
+        .form-group:nth-child(3) { animation-delay: 0.4s; }
+        .form-group:nth-child(4) { animation-delay: 0.5s; }
+        .terms { animation-delay: 0.6s; }
+        .btn-register { animation-delay: 0.7s; }
+        .login-link { animation-delay: 0.8s; }
+
+        /* 响应式设计 */
         @media (max-width: 500px) {
             .container {
-                padding: 30px 20px;
+                padding: 35px 25px;
+                border-radius: 18px;
+            }
+
+            .logo-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .logo-text {
+                font-size: 28px;
+            }
+
+            .header h2 {
+                font-size: 24px;
             }
 
             .verification-group {
@@ -322,20 +569,31 @@
 
             .verification-group .btn-send {
                 width: 100%;
-                padding: 14px;
+                padding: 16px;
+                margin-top: 10px;
+            }
+
+            .custom-input, .form-control {
+                padding: 14px 18px 14px 50px;
+                font-size: 15px;
+            }
+
+            .file-input-label {
+                padding: 14px 18px;
+            }
+
+            .btn-register {
+                padding: 16px;
             }
         }
     </style>
 </head>
 <body>
-<div class="decoration circle1"></div>
-<div class="decoration circle2"></div>
-<div class="decoration-item book">
-    <i class="fas fa-book"></i>
-</div>
-<div class="decoration-item laptop">
-    <i class="fas fa-laptop"></i>
-</div>
+<!-- 背景装饰元素 -->
+<div class="decoration"></div>
+<div class="decoration"></div>
+<div class="decoration"></div>
+<div class="decoration"></div>
 
 <div class="container">
     <div class="header">
@@ -343,10 +601,31 @@
             <div class="logo-icon">
                 <i class="fas fa-exchange-alt"></i>
             </div>
-            <div class="logo-text">校园<span>二手</span></div>
+            <div class="logo-text">校园二手</div>
         </div>
         <h2>创建新账户</h2>
-        <p>加入校园二手交易社区，开启绿色生活</p>
+        <p>加入校园二手交易社区，开启绿色循环生活</p>
+    </div>
+
+    <div class="custom-input-group">
+        <label for="nickname">用户昵称</label>
+        <div class="input-with-icon">
+            <i class="fas fa-user-tag"></i>
+            <input type="text" id="nickname" class="form-control" placeholder="设置您的昵称">
+        </div>
+    </div>
+
+    <div class="custom-input-group">
+        <label for="profilePicture">用户头像</label>
+        <div class="file-input-container">
+            <input type="file" id="profilePicture">
+            <label for="profilePicture" class="file-input-label">
+                <div>
+                    <i class="fas fa-cloud-upload-alt file-input-icon"></i>
+                    <span class="file-input-text">上传您的头像 (JPG/PNG)</span>
+                </div>
+            </label>
+        </div>
     </div>
 
     <form id="registerForm">
@@ -373,7 +652,9 @@
                     <i class="fas fa-shield-alt"></i>
                     <input type="text" id="verificationCode" class="form-control" placeholder="输入验证码">
                 </div>
-                <button type="button" class="btn-send" id="sendCodeBtn">发送验证码</button>
+                <button type="button" class="btn-send" id="sendCodeBtn">
+                    <i class="fas fa-paper-plane" style="margin-right: 8px;"></i>发送验证码
+                </button>
             </div>
         </div>
 
@@ -382,7 +663,7 @@
             <div class="input-with-icon password-container">
 <!--                <i class="fas fa-lock"></i>-->
                 <input type="password" id="password" class="form-control" placeholder="设置您的密码">
-                <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                <i class="fas fa-eye toggle-password" id="togglePassword" style="width: 5%"></i>
             </div>
             <div class="password-strength">
                 <div class="strength-bar" id="strength-bar1"></div>
@@ -406,7 +687,9 @@
             <label for="terms">我已阅读并同意 <a href="#">服务条款</a> 和 <a href="#">隐私政策</a>，并确认使用真实校园邮箱注册</label>
         </div>
 
-        <button type="submit" class="btn-register">立即注册</button>
+        <button type="submit" class="btn-register">
+            <i class="fas fa-user-plus" style="margin-right: 10px;"></i>立即注册
+        </button>
 
         <div class="login-link">
             已有账号? <a href="/login">立即登录</a>
@@ -427,6 +710,21 @@
         const strengthText = document.getElementById('strength-text');
         const sendCodeBtn = document.getElementById('sendCodeBtn');
         const registerForm = document.getElementById('registerForm');
+        const fileInput = document.getElementById('profilePicture');
+        const fileInputLabel = document.querySelector('.file-input-text');
+
+        // 更新文件输入标签
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                fileInputLabel.textContent = this.files[0].name;
+                fileInputLabel.parentElement.parentElement.style.borderColor = '#5d9cec';
+                fileInputLabel.parentElement.parentElement.style.backgroundColor = '#f0f7ff';
+            } else {
+                fileInputLabel.textContent = '上传您的头像 (JPG/PNG)';
+                fileInputLabel.parentElement.parentElement.style.borderColor = '#e4edf9';
+                fileInputLabel.parentElement.parentElement.style.backgroundColor = '#f8fbff';
+            }
+        });
 
         // 密码可见性切换
         togglePassword.addEventListener('click', function() {
@@ -504,14 +802,15 @@
             this.disabled = true;
             this.style.opacity = '0.7';
             let seconds = 60;
+            const originalText = this.innerHTML;
 
             const timer = setInterval(() => {
-                this.textContent = `重新发送(${seconds})`;
+                this.innerHTML = `<i class="fas fa-clock" style="margin-right: 8px;"></i>重新发送(${seconds})`;
                 seconds--;
 
                 if (seconds < 0) {
                     clearInterval(timer);
-                    this.textContent = '发送验证码';
+                    this.innerHTML = originalText;
                     this.disabled = false;
                     this.style.opacity = '1';
                     axios.post("/expire", {}, {
@@ -525,14 +824,14 @@
             // 模拟发送验证码
             // alert(`验证码已发送至: ${email}\n（演示模式，实际应用中会发送真实验证码）`);
             axios.post("/code", {
-                    email: email
-                }, {
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    }
-                }).then(({data}) => {
-                    alert(data)
-                })
+                email: email
+            }, {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            }).then(({data}) => {
+                alert(data)
+            })
         });
 
         // 邮箱验证
@@ -545,14 +844,28 @@
         registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
+            const nickname = document.getElementById('nickname').value;
+            const profilePicture = document.getElementById('profilePicture').files[0];
             const username = document.getElementById('username').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             const verificationCode = document.getElementById('verificationCode').value;
             const terms = document.getElementById('terms').checked;
+            let formData = new FormData();
+            formData.append('nickname', nickname);
+            formData.append('username', username);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('profilePicture1', profilePicture);
+            formData.append('code', verificationCode);
 
             // 表单验证
+            if (!nickname) {
+                alert('请输入用户昵称');
+                return;
+            }
+
             if (!username) {
                 alert('请输入用户名');
                 return;
@@ -593,46 +906,36 @@
                 return;
             }
 
-            // 模拟注册过程
             const registerBtn = document.querySelector('.btn-register');
-            registerBtn.textContent = '注册中...';
+            registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i>注册中...';
             registerBtn.disabled = true;
 
-            // setTimeout(() => {
-            //     alert('注册成功！\n欢迎加入校园二手交易平台');
-            //     registerBtn.textContent = '立即注册';
-            //     registerBtn.disabled = false;
-            //     // 实际应用中这里会提交表单
-            // }, 1500);
-            axios.post("/register", {
-                username: username,
-                email: email,
-                password: password,
-                code: verificationCode
-            },{
+
+            axios.post("/register", formData, {
                 headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
+                    // "Content-Type": "application/x-www-form-urlencoded"
+                    "Content-Type": "multipart/form-data"
                 }
             }).then(({data}) => {
                 if (data === "register access"){
                     alert('注册成功！\n欢迎加入校园二手交易平台');
-                    registerBtn.textContent = '立即注册';
+                    registerBtn.innerHTML = '<i class="fas fa-user-plus" style="margin-right: 10px;"></i>立即注册';
                     registerBtn.disabled = false;
                     window.location.href = "/login";
                 }
                 if (data === "register failed"){
                     alert('注册失败，用户名已存在');
-                    registerBtn.textContent = '立即注册';
+                    registerBtn.innerHTML = '<i class="fas fa-user-plus" style="margin-right: 10px;"></i>立即注册';
                     registerBtn.disabled = false;
                 }
                 if (data === "code expired"){
                     alert('验证码已过期，请重新获取');
-                    registerBtn.textContent = '立即注册';
+                    registerBtn.innerHTML = '<i class="fas fa-user-plus" style="margin-right: 10px;"></i>立即注册';
                     registerBtn.disabled = false;
                 }
                 if (data === "code error"){
                     alert('验证码错误，请重新输入');
-                    registerBtn.textContent = '立即注册';
+                    registerBtn.innerHTML = '<i class="fas fa-user-plus" style="margin-right: 10px;"></i>立即注册';
                     registerBtn.disabled = false;
                 }
             })

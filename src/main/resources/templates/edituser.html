@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>edit user info</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
+</head>
+<style>
+    div#profilePictureDiv {
+        display: flex;
+        align-items: center;
+    }
+    img#profilePicture {
+        width: 100px;
+        height: 100px;
+        cursor: pointer;
+    }
+    input#profilePicture {
+        display: none;
+    }
+</style>
+<body>
+    <a th:href="@{/home}">我的</a>
+    <a th:href="@{/addproduct}">发布</a>
+    <a th:href="@{/chat/chatList}">聊天</a>
+    <a th:href="@{/index}">首页</a>
+    <div>
+        <input type="hidden" name="id" th:value="${user.id}">
+        <h1>当前用户信息:</h1>
+        <div id="profilePictureDiv">
+            <label for="profilePicture">个人头像:</label>
+            <img th:src="${user.profilePicture}" alt="Profile Picture" width="100" height="100"><br><br>
+            <input type="file" id="profilePicture" name="profilePicture" accept="image/gif, image/jpeg, image/png, image/jpg"><br><br>
+        </div>
+        <label for="nickname">个人昵称:</label>
+        <input type="text" id="nickname" name="nickname" th:value="${user.nickname}"><br><br>
+        <label for="email">个人邮箱:</label>
+        <input type="email" id="email" name="email" th:value="${user.email}"><br><br>
+        <label for="username">用户名:</label>
+        <input type="text" id="username" name="username" th:value="${user.username}"><br><br>
+        <label for="password">密码:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <input type="hidden" id="oldPassword" name="oldPassword" th:value="${user.password}"><br><br>
+        <input type="submit" value="Submit">
+    </div>
+</body>
+<script>
+    document.querySelector("input#profilePicture").addEventListener("change", function (event) {
+        const formData = new FormData();
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.width = 100;
+            img.height = 100;
+            document.querySelector("img").replaceWith(img);
+        }
+        reader.readAsDataURL(file);
+        formData.append("id", document.querySelector("input[name='id']").value);
+        formData.append("nickname", document.querySelector("input[name='nickname']").value);
+        formData.append("email", document.querySelector("input[name='email']").value);
+        formData.append("username", document.querySelector("input[name='username']").value);
+        formData.append("password", document.querySelector("input[name='oldPassword']").value);
+        formData.append("profilePicture1", file);
+        axios.post("/editUser", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+        }).then(({data}) => {
+            if (data === "success") {
+                alert("Edit success");
+            }
+        })
+    })
+
+    document.querySelector("input[type='submit']").addEventListener("click", function (event) {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append("id", document.querySelector("input[name='id']").value);
+        // formData.append("profilePicture1", document.querySelector("input[name='profilePicture']").files[0]);
+        formData.append("nickname", document.querySelector("input[name='nickname']").value);
+        formData.append("email", document.querySelector("input[name='email']").value);
+        formData.append("username", document.querySelector("input[name='username']").value);
+        formData.append("password", document.querySelector("input[name='password']").value);
+        axios.post("/editUser", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(({data}) => {
+            if (data === "success") {
+                alert("Edit success");
+                window.location.href = "/home";
+            }
+        })
+    })
+</script>
+</html>

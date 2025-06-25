@@ -6,6 +6,10 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </head>
 <body>
+    <a th:href="@{/home}">我的</a>
+    <a th:href="@{/addproduct}">发布</a>
+    <a th:href="@{/chat/chatList}">聊天</a>
+    <a th:href="@{/index}">首页</a>
     <form action="/editproduct" method="post" enctype="multipart/form-data">
         <input type="hidden" name="pid" th:value="${product.pid}">
         <label for="pname">商品名称：</label>
@@ -13,7 +17,7 @@
         <label for="depict">商品描述：</label>
         <input type="text" name="depict" id="depict" th:value="${product.depict}"><br>
         <label for="file">商品图片：</label>
-        <input type="file" name="file" id="file" multiple><br>
+        <input type="file" name="file" id="file" accept="image/gif, image/jpeg, image/png, image/jpg" multiple><br>
         <label for="category">商品类别：</label>
         <input type="radio" th:each="category:${categories}" th:text="${category}" th:value="${category}" name="category" id="category"><br>
         <label for="price">商品价格：</label>

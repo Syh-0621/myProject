@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Account {
     private Integer id;
+    private String profilePicture;
     private String username;
+    private String nickname;
     private String password;
     private String email;
     private String role;

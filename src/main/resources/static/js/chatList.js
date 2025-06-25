@@ -1,23 +1,23 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     // 获取当前用户
     let fromUserAlert = document.getElementById("FromUser").innerText;
     fromUserAlert = fromUserAlert.slice(0, fromUserAlert.indexOf("@"));
     let alertSocket = new WebSocket("wss://syh0621.xyz/websocket/" + fromUserAlert);
 
-    document.querySelectorAll("#ToUser").forEach(user=>{
-        axios.post("/chat/unread", {
+    for (const user of document.querySelectorAll("#ToUser")) {
+        await axios.post("/chat/unread", {
             "fromUser": user.previousElementSibling.innerText,
             "toUser": user.innerText
-        }).then(({data})=>{
+        }).then(({data}) => {
             if (data > 0) {
                 user.parentElement.children[0].children[1].children[2].innerText = data;
                 user.parentElement.children[0].children[1].children[2].style.display = "block";
             }
         })
-        axios.post("/chat/history", {
+        await axios.post("/chat/history", {
             "fromUser": user.previousElementSibling.innerText,
             "toUser": user.innerText
-        }).then(({data})=>{
+        }).then(({data}) => {
             console.log(data)
             const lastMes = data[data.length - 1];
             //最后一条信息
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 user.parentElement.children[0].children[1].children[1].innerHTML = "[图片]";
             }
         })
-    })
+    }
 
     alertSocket.onopen = function (event) {
         console.log("连接成功");
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 })
 
-document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener("click", function () {
+document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener("click", async function () {
     let toUser = this.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
     let fromUser = this.nextElementSibling.nextElementSibling.innerText;
     let pid = this.nextElementSibling.innerText;
@@ -62,7 +62,10 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
     chatBox.style.display = "block";
     document.getElementById("msg").innerText = "";
     document.getElementById("noChatSelected").style.display = "none";
-    document.getElementById("chatTitle").innerText = toUser;
+    await axios.post(`/getUser?username=${toUser.substring(0, toUser.indexOf('@'))}`).then(({data}) => {
+        console.log(data)
+        document.getElementById("chatTitle").innerText = data.nickname;
+    });
 
     socket.onerror = function (e) {
         console.log(e);
@@ -71,12 +74,12 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
     const sendBtn = document.getElementById("send");
     const imgBtn = document.getElementById("img");
 
-    axios.post("/chat/history", {
+    await axios.post("/chat/history", {
         "fromUser": fromUser,
         "toUser": toUser
-    }).then(({data})=>{
+    }).then(({data}) => {
         console.log(data);
-        data.forEach((mes)=>{
+        data.forEach((mes) => {
             mes.MFromUser = mes.MFromUser === fromUser ? '我' : toUser;
             if (mes.MToUser === fromUser) mes.isRead = true;
             addMessageElement(mes);
@@ -93,8 +96,8 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
     socket.onmessage = function (event) {
         console.log("收到消息：" + event.data);
         let msg = JSON.parse(event.data);
-        if (msg.isConfirmed && msg.MFromUser === toUser){
-            document.querySelectorAll("span#isRead").forEach((e)=>{
+        if (msg.isConfirmed && msg.MFromUser === toUser) {
+            document.querySelectorAll("span#isRead").forEach((e) => {
                 e.innerText = ' 已读';
             })
             return;
@@ -173,44 +176,17 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
         socket.send(JSON.stringify(msg));
     }
 
-    // function addMessageElement(message) {
-    //     const messageElement = document.createElement('div');
-    //     const messageFrom = document.createElement('span');
-    //     const messageTime = document.createElement('span');
-    //     const messageContent = document.createElement('span');
-    //     const messageIsRead = document.createElement('span');
-    //     messageIsRead.id = "isRead";
-    //     messageFrom.innerText = message.MFromUser === '我' ? ':我' : toUser + ":";
-    //     messageTime.innerText = ` ${message.MTime}`;
-    //     messageContent.innerText = `${message.MContent}`;
-    //     messageIsRead.innerText = message.isRead === true ? ' 已读' : ' 未读';
-    //     messageIsRead.style.opacity = "0.5";
-    //     messageIsRead.style.color = messageIsRead.innerText === ' 已读' ? 'green' : 'red';
-    //
-    //     messageElement.appendChild(messageFrom);
-    //     if (message.isImg) {
-    //         const img = document.createElement('img');
-    //         img.src = message.MContent;
-    //         img.style.width = "300px";
-    //         img.style.height = "150px";
-    //         img.style.objectFit = "cover";
-    //         messageElement.appendChild(img);
-    //     } else {
-    //         messageContent.style.display = "flex";
-    //         messageContent.style.border = "1px solid #ccc";
-    //         messageContent.style.margin = "10px";
-    //         messageElement.appendChild(messageContent);
-    //     }
-    //     messageElement.appendChild(messageTime);
-    //     messageElement.appendChild(messageIsRead);
-    //     if (message.MFromUser === '我'){
-    //         messageElement.style.textAlign = "right";
-    //         messageElement.style.flexDirection = "row-reverse";
-    //     }
-    //     document.getElementById("msg").append(messageElement);
-    // }
+    async function addMessageElement(message) {
+        let fromUser = message.MFromUser === '我' ? document.querySelector("p#fromUser").innerText : message.MFromUser;
+        fromUser = fromUser.substring(0, fromUser.indexOf('@'));
+        let fromUserPic = document.createElement('span');
+        axios.post(`/getUser?username=${fromUser}`).then(({data}) => {
+            fromUserPic.innerHTML = `<img src="${data.profilePicture}" alt="头像" class="avatar">`;
+        })
+        fromUserPic.addEventListener('click', function () {
+            window.location.href = `/user/${fromUser}`;
+        })
 
-    function addMessageElement(message) {
         // 创建消息容器
         const messageElement = document.createElement('div');
         messageElement.classList.add('message');
@@ -257,7 +233,7 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
             img.alt = '图片消息';
 
             // 添加点击预览功能
-            img.addEventListener('click', function() {
+            img.addEventListener('click', function () {
                 const overlay = document.createElement('div');
                 overlay.classList.add('image-overlay');
 
@@ -268,7 +244,7 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
                 overlay.appendChild(fullImg);
                 document.body.appendChild(overlay);
 
-                overlay.addEventListener('click', function() {
+                overlay.addEventListener('click', function () {
                     document.body.removeChild(this);
                 });
             });
@@ -290,7 +266,17 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
 
         // 添加到消息容器
         const msgContainer = document.getElementById("msg");
-        msgContainer.appendChild(messageElement);
+        let msg = document.createElement('div');
+        msg.appendChild(fromUserPic);
+        msg.appendChild(messageElement);
+        msg.style.display = 'flex';
+        msg.style.flexDirection = 'row';
+        if (message.MFromUser === '我') {
+            msg.style.flexDirection = 'row-reverse';
+        }
+        msgContainer.appendChild(msg);
+        // msgContainer.appendChild(fromUserPic);
+        // msgContainer.appendChild(messageElement);
 
         // 滚动到底部
         msgContainer.scrollTop = msgContainer.scrollHeight;
@@ -302,7 +288,7 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
         }, 10);
 
         // 滚动到最新消息
-        document.getElementById("chatBox").scrollTo(0,document.getElementById("chatBox").scrollHeight);
+        document.getElementById("chatBox").scrollTo(0, document.getElementById("chatBox").scrollHeight);
     }
 
 }))
