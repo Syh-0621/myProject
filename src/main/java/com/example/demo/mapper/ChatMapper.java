@@ -1,10 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.entity.Chat;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -19,4 +16,7 @@ public interface ChatMapper {
 
     @Insert("INSERT INTO chat(user1, user2, pid) VALUES(#{user1}, #{user2}, #{pid})")
     int add(Chat chat);
+
+    @Delete("DELETE FROM chat WHERE pid = #{pid}")
+    int deleteByPid(Integer pid);
 }

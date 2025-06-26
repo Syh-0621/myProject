@@ -1,10 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.entity.ChatMsgVO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -21,4 +18,10 @@ public interface ChatMsgMapper {
 
     @Update("UPDATE chat_msg SET isRead = true WHERE MFromUser = #{MToUser} AND MToUser = #{MFromUser} AND isRead = false")
     int update(ChatMsgVO chatMsg);
+
+    @Select("SELECT * FROM chat_msg WHERE MFromUser LIKE CONCAT('%',#{pid}) OR MToUser LIKE CONCAT('%',#{pid})")
+    List<ChatMsgVO> selectMsgByPid(Integer pid);
+
+    @Delete("DELETE FROM chat_msg WHERE MFromUser = #{MFromUser} AND MToUser = #{MToUser} AND MTime = #{MTime} AND MContent = #{MContent}")
+    int deleteByMsg(ChatMsgVO msg);
 }

@@ -25,7 +25,7 @@ public interface ProductService {
 
     String editProduct(Product product, MultipartFile[] images, String username);
 
-    int deleteProduct(int id);
+    int deleteProduct(Integer id);
 
     List<Product> showProductByCategory(String category);
 

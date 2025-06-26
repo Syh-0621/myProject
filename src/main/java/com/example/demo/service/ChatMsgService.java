@@ -12,4 +12,6 @@ public interface ChatMsgService {
     int updateChatMsg(ChatMsgVO chatMsg);
 
     Integer getUnreadCount(String MFromUser, String MToUser);
+
+    int deleteAllChatMsgByPid(Integer pid);
 }

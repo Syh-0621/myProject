@@ -2,6 +2,9 @@ package com.example.demo.service.impl;
 
 import com.example.demo.entity.Product;
 import com.example.demo.mapper.ProductMapper;
+import com.example.demo.service.ChatMsgService;
+import com.example.demo.service.ChatService;
+import com.example.demo.service.LeaveMesService;
 import com.example.demo.service.ProductService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,15 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductMapper productMapper;
 
+    @Autowired
+    private LeaveMesService leaveMesService;
+
+    @Autowired
+    private ChatService chatService;
+
+    @Autowired
+    private ChatMsgService chatMsgService;
+
     @Getter
     private static final List<String> categories = new ArrayList<String>() {{
         add("电子产品");
@@ -36,6 +48,8 @@ public class ProductServiceImpl implements ProductService {
         add("食品");
         add("其他");
     }};
+    @Autowired
+    private com.example.demo.util.fileUtil fileUtil;
 
     @Override
     public List<Product> showAllProduct() {
@@ -95,7 +109,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String addProduct(Product product, MultipartFile[] images, String username){
-        String imgpath = uploadImages(images, username);
+        String imgpath = fileUtil.uploadFile(images, username);
         product.setUname(username);
         product.setImage(imgpath);
         System.out.println(product);
@@ -135,8 +149,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int deleteProduct(int id){
-        deleteImages(productMapper.selectProductById(id));
+    public int deleteProduct(Integer id){
+        //删除商品聊天
+        chatService.deleteChatByPid(id);
+        //删除商品聊天记录
+        chatMsgService.deleteAllChatMsgByPid(id);
+        //删除商品留言
+        leaveMesService.deleteAllLeaveMesByPid(id);
+        //删除商品图片
+        fileUtil.deleteFile(showProductById(id).getImage());
+        //删除商品信息
         return productMapper.deleteProductById(id);
     }
 

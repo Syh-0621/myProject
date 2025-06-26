@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.alibaba.fastjson2.JSON;
 import com.example.demo.entity.Product;
+import com.example.demo.service.LeaveMesService;
 import com.example.demo.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class ProductController {
     private ProductService productService;
     @Autowired
     private HttpServletRequest httpServletRequest;
+    @Autowired
+    private LeaveMesService leaveMesService;
 
     @GetMapping("/")
     public String index1(Model model) {
@@ -38,13 +41,15 @@ public class ProductController {
     }
 
     @GetMapping("/addproduct")
-    public String add(Model model) {
+    public String add(Model model, Authentication authentication) {
+        model.addAttribute("username", authentication.getName());
         model.addAttribute("categories", productService.showAllCategory());
         return "addproduct";
     }
 
     @PostMapping("/addproduct")
     public String add(Product product, @RequestParam("file") MultipartFile[] file, Authentication authentication) {
+        System.out.println(product);
         productService.addProduct(product, file, authentication.getName());
         return "redirect:/index";
     }
@@ -60,6 +65,7 @@ public class ProductController {
     public String product(@PathVariable("id") int id, Model model, Authentication authentication) {
         model.addAttribute("username", authentication.getName());
         model.addAttribute("product", productService.showProductById(id));
+        model.addAttribute("leavemes", leaveMesService.selectLeaveMesByProductId(id));
         return "product";
     }
 
@@ -106,4 +112,5 @@ public class ProductController {
         model.addAttribute("categories", productService.showAllCategory());
         return "index";
     }
+
 }

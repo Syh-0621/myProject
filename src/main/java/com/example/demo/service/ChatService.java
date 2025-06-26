@@ -12,6 +12,7 @@ public interface ChatService {
 
     int addChat(Chat chat);
 
-    String uploadImg(MultipartFile img, String username);
+    String uploadImg(MultipartFile[] images, String username);
 
+    int deleteChatByPid(Integer pid);
 }

@@ -113,6 +113,7 @@ public class UserController {
     @PostMapping("/editUser")
     @ResponseBody
     public String editUser(Account user, MultipartFile[] profilePicture1) {
+        System.out.println(user);
         if (userService.editUser(user, profilePicture1) > 0) {
             return "success";
         }

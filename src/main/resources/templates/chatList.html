@@ -1,4 +1,5 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,59 +9,92 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --success-color: #4cc9f0;
-            --gray-light: #e9ecef;
-            --gray-medium: #adb5bd;
+            --primary-color: #007BFF;
+            --secondary-color: #0056b3;
+            --light-color: #F8F9FA;
+            --dark-color: #343A40;
+            --success-color: #28a745;
+            --gray-light: #E9ECEF;
+            --gray-medium: #6C757D;
             --gray-dark: #495057;
-            --border-radius: 12px;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
+            --border-radius: 10px;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --transition: all 0.2s ease-in-out;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
             display: flex;
             height: 100vh;
             overflow: hidden;
-            background-color: #f5f7fb;
+            background-color: #f4f6f9;
             color: var(--dark-color);
+        }
+
+        /* 移动端顶部导航 */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-header .back-btn {
+            color: white;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .mobile-header h1 {
+            font-size: 1.2rem;
+            font-weight: 500;
         }
 
         /* 左侧边栏样式 */
         #leftItems {
-            width: 320px;
-            background: white;
+            width: 300px;
+            background: #fff;
             border-right: 1px solid var(--gray-light);
             display: flex;
             flex-direction: column;
             height: 100%;
             box-shadow: var(--shadow);
             z-index: 10;
+            transition: transform 0.3s ease;
         }
 
         .sidebar-header {
             padding: 20px;
             background-color: var(--primary-color);
             color: white;
+            text-align: center;
         }
 
         .sidebar-header h1 {
             font-size: 1.5rem;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
 
         .nav-links {
-            padding: 15px 20px;
+            padding: 15px;
             border-bottom: 1px solid var(--gray-light);
         }
 
@@ -69,7 +103,7 @@
             align-items: center;
             color: var(--dark-color);
             text-decoration: none;
-            padding: 10px 15px;
+            padding: 12px 15px;
             border-radius: var(--border-radius);
             margin-bottom: 8px;
             transition: var(--transition);
@@ -113,14 +147,12 @@
         }
 
         #productInfo:hover {
-            background-color: #f0f5ff;
+            background-color: #e7f1ff;
             border-color: var(--primary-color);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
         }
 
         #productInfo.active {
-            background-color: #e6f0ff;
+            background-color: #d0e3ff;
             border-color: var(--primary-color);
         }
 
@@ -135,12 +167,17 @@
 
         .product-details {
             flex: 1;
+            min-width: 0;
         }
 
         #pName {
             font-weight: 600;
             margin-bottom: 5px;
             color: var(--dark-color);
+            font-size: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .last-message {
@@ -149,7 +186,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 200px;
         }
 
         /* 右侧聊天区域样式 */
@@ -158,22 +194,18 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            background-color: #f5f7fb;
+            background-color: #f4f6f9;
+            position: relative;
         }
 
         .chat-header {
-            padding: 20px;
+            padding: 18px 20px;
             background-color: white;
             border-bottom: 1px solid var(--gray-light);
             display: flex;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
             z-index: 5;
-        }
-
-        .chat-header h1 {
-            font-size: 1.3rem;
-            color: var(--dark-color);
         }
 
         .back-btn {
@@ -181,23 +213,35 @@
             margin-right: 15px;
             cursor: pointer;
             color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .chat-header h1 {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 70%;
         }
 
         .chat-messages {
             flex: 1;
-            padding: 20px;
+            padding: 15px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
         }
 
         .message {
-            max-width: 70%;
+            max-width: 85%;
             padding: 12px 16px;
             border-radius: 18px;
             margin-bottom: 15px;
             position: relative;
             animation: fadeIn 0.3s ease;
+            line-height: 1.4;
+            font-size: 0.95rem;
         }
 
         @keyframes fadeIn {
@@ -205,17 +249,33 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        .message.sent {
+            background: var(--primary-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.received {
+            background: white;
+            border: 1px solid var(--gray-light);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
         .message-time {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             opacity: 0.7;
             margin-top: 5px;
             text-align: right;
         }
 
         .image-message {
-            max-width: 300px;
-            border-radius: 12px;
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 10px;
             margin-top: 5px;
+            display: block;
         }
 
         .input-container {
@@ -233,12 +293,13 @@
             border-radius: 30px;
             padding: 5px 15px;
             border: 1px solid var(--gray-light);
+            align-items: center;
         }
 
         #input input {
             flex-grow: 1;
             border: none;
-            padding: 12px;
+            padding: 12px 10px;
             outline: none;
             font-size: 1rem;
             background: transparent;
@@ -254,7 +315,7 @@
             cursor: pointer;
             transition: var(--transition);
             border: none;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .btn-primary {
@@ -273,6 +334,11 @@
             padding: 0;
             background: transparent;
             color: var(--gray-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin: 0 5px;
         }
 
         .btn-icon:hover {
@@ -299,52 +365,166 @@
         }
 
         .no-chat-selected h2 {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             margin-bottom: 15px;
             color: var(--gray-dark);
         }
 
         .no-chat-selected p {
-            max-width: 400px;
+            max-width: 350px;
             line-height: 1.6;
+            font-size: 0.95rem;
         }
 
         /* 响应式设计 */
         @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .mobile-header {
+                display: flex;
+                align-items: center;
+            }
+
             #leftItems {
                 width: 100%;
-                display: block;
+                height: calc(100% - 60px);
+                position: fixed;
+                top: 60px;
+                left: 0;
+                transform: translateX(0);
+                z-index: 50;
+            }
+
+            #leftItems.hidden {
+                transform: translateX(-100%);
             }
 
             #rightItems {
                 display: none;
                 position: fixed;
-                top: 0;
+                top: 60px;
                 left: 0;
                 width: 100%;
-                height: 100%;
-                z-index: 20;
+                height: calc(100% - 60px);
+                z-index: 60;
+            }
+
+            #rightItems.active {
+                display: flex;
             }
 
             .back-btn {
-                display: block;
+                display: flex;
+            }
+
+            .sidebar-header {
+                padding: 15px;
+            }
+
+            .sidebar-header h1 {
+                font-size: 1.3rem;
             }
 
             .chat-list-title {
-                font-size: 1rem;
+                font-size: 1.1rem;
             }
 
             #productInfo {
                 padding: 12px;
             }
 
+            #pImg {
+                width: 50px;
+                height: 50px;
+            }
+
+            .chat-messages {
+                padding: 10px;
+            }
+
+            .message {
+                max-width: 90%;
+                padding: 10px 14px;
+                font-size: 0.9rem;
+            }
+
+            .input-container {
+                padding: 10px;
+            }
+
+            #input {
+                padding: 5px 10px;
+            }
+
+            #input input {
+                padding: 10px 8px;
+                font-size: 0.95rem;
+            }
+
+            .btn-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            .btn-primary {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+
+            .no-chat-selected i {
+                font-size: 3rem;
+            }
+
             .no-chat-selected h2 {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .mobile-header h1 {
+                font-size: 1.1rem;
+            }
+
+            #productInfo {
+                padding: 10px;
+            }
+
+            #pImg {
+                width: 45px;
+                height: 45px;
+                margin-right: 10px;
+            }
+
+            #pName {
+                font-size: 0.95rem;
+            }
+
+            .last-message {
+                font-size: 0.8rem;
+            }
+
+            .chat-header {
+                padding: 15px;
+            }
+
+            .chat-header h1 {
+                font-size: 1.1rem;
             }
         }
     </style>
 </head>
 <body>
+<!-- 移动端顶部导航 -->
+<div class="mobile-header">
+    <div class="back-btn" id="mobileBackBtn">
+        <i class="fas fa-arrow-left"></i>
+    </div>
+    <h1 id="mobileTitle">聊天中心</h1>
+</div>
+
 <!-- 左侧聊天列表 -->
 <div id="leftItems">
     <div class="sidebar-header">
@@ -424,16 +604,63 @@
                 const productInfo = pid.parentNode.children[0];
                 const imgEle = productInfo.children[0];
                 const detailEle = productInfo.children[1];
-                // detailEle.children[0].textContent = data.pname;
                 const toUser = pid.nextElementSibling.nextElementSibling.innerText;
                 axios.post(`/getUser?username=${toUser.substring(0,toUser.indexOf('@'))}`).then(({data})=>{
-                    console.log(data)
                     detailEle.children[0].textContent = data.nickname;
                 });
                 imgEle.src = data.image;
             })
         })
+
+        // 添加移动端交互逻辑
+        const leftItems = document.getElementById('leftItems');
+        const rightItems = document.getElementById('rightItems');
+        const noChatSelected = document.getElementById('noChatSelected');
+        const chatBox = document.getElementById('chatBox');
+        const backBtn = document.getElementById('backBtn');
+        const mobileBackBtn = document.getElementById('mobileBackBtn');
+        const chatItems = document.querySelectorAll('#productInfo');
+        const mobileTitle = document.getElementById('mobileTitle');
+
+        // 移动端返回按钮
+        backBtn.addEventListener('click', function() {
+            rightItems.classList.remove('active');
+            leftItems.classList.remove('hidden');
+            mobileTitle.textContent = "聊天中心";
+        });
+
+        mobileBackBtn.addEventListener('click', function() {
+            if (rightItems.classList.contains('active')) {
+                // 从聊天返回聊天列表
+                rightItems.classList.remove('active');
+                leftItems.classList.remove('hidden');
+                mobileTitle.textContent = "聊天中心";
+            } else {
+                // 返回上一级页面
+                history.back();
+            }
+        });
+
+        // 聊天项点击事件
+        chatItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // 在移动端显示聊天界面
+                if (window.innerWidth <= 768) {
+                    leftItems.classList.add('hidden');
+                    rightItems.classList.add('active');
+
+                    // 更新移动端标题
+                    const nickname = this.querySelector('#pName').textContent;
+                    mobileTitle.textContent = nickname || "聊天";
+                }
+
+                // 清除未读消息数
+                const unread = this.querySelector('#alertNum');
+                if (unread) unread.style.display = 'none';
+            });
+        });
     })
+
     async function getProduct(pid){
         let result;
         await axios.post('/getproduct?pid=' + pid).then(function (response) {
@@ -441,6 +668,19 @@
         })
         return result
     }
+
+    // 原有JS逻辑保持不变
+    document.addEventListener("DOMContentLoaded", async function () {
+        // ... 原有JS逻辑 ...
+    })
+
+    document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener("click", async function () {
+        // ... 原有JS逻辑 ...
+    }))
+
+    document.querySelectorAll("div#productInfo").forEach(div => {
+        // ... 原有JS逻辑 ...
+    })
 </script>
 <script src="/js/chatList.js"></script>
 </body>

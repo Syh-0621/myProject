@@ -177,7 +177,7 @@ document.querySelectorAll("div#productInfo").forEach(btn => btn.addEventListener
     }
 
     async function addMessageElement(message) {
-        let fromUser = message.MFromUser === '我' ? document.querySelector("p#fromUser").innerText : message.MFromUser;
+        let fromUser = message.MFromUser === '我' ? document.querySelector("p#FromUser").innerText : message.MFromUser;
         fromUser = fromUser.substring(0, fromUser.indexOf('@'));
         let fromUserPic = document.createElement('span');
         axios.post(`/getUser?username=${fromUser}`).then(({data}) => {

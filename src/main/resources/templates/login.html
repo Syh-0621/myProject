@@ -6,6 +6,7 @@
   <title>校园二手交易平台 - 登录</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* 全局样式重置与优化 */
     * {
       margin: 0;
       padding: 0;
@@ -14,56 +15,113 @@
     }
 
     body {
-      background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
+      background: linear-gradient(135deg, #e1f5fe, #b3e5fc);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
+      position: relative;
+      overflow-x: hidden;
     }
 
+    /* 背景装饰元素 */
+    .bg-circle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.1;
+      z-index: 0;
+    }
+
+    .circle-1 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(135deg, #0288d1, #03a9f4);
+      top: 10%;
+      left: 5%;
+      animation: float 15s ease-in-out infinite;
+    }
+
+    .circle-2 {
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(135deg, #03a9f4, #29b6f6);
+      bottom: 10%;
+      right: 8%;
+      animation: float 18s ease-in-out infinite;
+      animation-delay: 2s;
+    }
+
+    .circle-3 {
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, #0288d1, #01579b);
+      top: 25%;
+      right: 15%;
+      animation: float 12s ease-in-out infinite;
+      animation-delay: 1s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(-20px, 20px); }
+      50% { transform: translate(20px, -20px); }
+      75% { transform: translate(-15px, -15px); }
+    }
+
+    /* 主容器样式 - 卡片式设计 */
     .container {
-      display: flex;
-      max-width: 1000px;
       width: 100%;
-      background: white;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 15px 35px rgba(0, 0, 150, 0.1);
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 30px;
+      position: relative;
+      z-index: 10;
     }
 
-    .left-panel {
-      flex: 1;
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      color: white;
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+        max-width: 600px;
+      }
+    }
+
+    /* 欢迎面板 */
+    .welcome-panel {
+      background: linear-gradient(135deg, #0288d1, #03a9f4);
+      border-radius: 20px;
       padding: 50px 40px;
+      color: white;
+      box-shadow: 0 15px 35px rgba(2, 136, 209, 0.3);
       display: flex;
       flex-direction: column;
       justify-content: center;
       position: relative;
       overflow: hidden;
+      transform: translateY(0);
+      transition: transform 0.5s ease;
     }
 
-    .left-panel::before {
-      content: "";
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.15);
-      top: -100px;
-      right: -100px;
+    .welcome-panel:hover {
+      transform: translateY(-10px);
     }
 
-    .left-panel::after {
+    .welcome-panel::before {
       content: "";
       position: absolute;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      bottom: -80px;
-      left: -80px;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+      animation: rotate 25s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     .logo {
@@ -84,6 +142,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: transform 0.3s ease;
+    }
+
+    .logo i:hover {
+      transform: scale(1.1);
     }
 
     .logo h1 {
@@ -110,6 +173,7 @@
     }
 
     .features {
+      margin-bottom: 20px;
       position: relative;
       z-index: 2;
     }
@@ -118,6 +182,8 @@
       display: flex;
       align-items: center;
       margin: 15px 0;
+      position: relative;
+      z-index: 2;
     }
 
     .feature i {
@@ -129,18 +195,51 @@
       align-items: center;
       justify-content: center;
       margin-right: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .feature i:hover {
+      transform: scale(1.1);
     }
 
     .feature p {
       font-size: 15px;
     }
 
-    .right-panel {
-      flex: 1;
-      padding: 60px 50px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+    .decoration {
+      position: absolute;
+      z-index: 2;
+      opacity: 0.7;
+      font-size: 24px;
+      transition: transform 0.5s ease;
+    }
+
+    .book {
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .laptop {
+      top: 20px;
+      left: 30px;
+    }
+
+    .decoration:hover {
+      transform: scale(1.2);
+    }
+
+    /* 登录面板 */
+    .login-panel {
+      background: white;
+      border-radius: 20px;
+      padding: 50px 40px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      transform: translateY(0);
+      transition: transform 0.5s ease;
+    }
+
+    .login-panel:hover {
+      transform: translateY(-10px);
     }
 
     .login-header {
@@ -152,11 +251,26 @@
       color: #2c3e50;
       font-size: 28px;
       margin-bottom: 10px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .login-header h2::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(to right, #0288d1, #03a9f4);
+      border-radius: 2px;
     }
 
     .login-header p {
       color: #7f8c8d;
       font-size: 16px;
+      margin-top: 20px;
     }
 
     .form-group {
@@ -181,25 +295,25 @@
       left: 15px;
       top: 50%;
       transform: translateY(-50%);
-      color: #3498db;
+      color: #03a9f4;
       font-size: 18px;
     }
 
     .form-control {
       width: 100%;
       padding: 14px 20px 14px 50px;
-      border: 2px solid #e3f2fd;
-      border-radius: 12px;
+      border: 2px solid #e1f5fe;
+      border-radius: 10px;
       font-size: 16px;
       transition: all 0.3s ease;
-      background: #f8fbfe;
+      background: #f1f8e9;
       color: #2c3e50;
     }
 
     .form-control:focus {
       outline: none;
-      border-color: #4facfe;
-      box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
+      border-color: #03a9f4;
+      box-shadow: 0 0 0 3px rgba(3, 169, 244, 0.2);
     }
 
     .form-control::placeholder {
@@ -221,38 +335,56 @@
 
     .remember input {
       margin-right: 8px;
-      accent-color: #3498db;
+      accent-color: #03a9f4;
     }
 
     .forgot-password {
-      color: #3498db;
+      color: #03a9f4;
       text-decoration: none;
       transition: color 0.3s;
     }
 
     .forgot-password:hover {
-      color: #2980b9;
+      color: #0288d1;
       text-decoration: underline;
     }
 
     .btn-login {
       width: 100%;
       padding: 15px;
-      background: linear-gradient(to right, #4facfe, #00f2fe);
+      background: linear-gradient(to right, #0288d1, #03a9f4);
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       color: white;
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+      box-shadow: 0 4px 15px rgba(3, 169, 244, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-login::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(30deg);
+      transition: all 0.6s;
     }
 
     .btn-login:hover {
-      background: linear-gradient(to right, #3ba1fd, #00d9f2);
+      background: linear-gradient(to right, #03a9f4, #29b6f6);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+      box-shadow: 0 6px 20px rgba(3, 169, 244, 0.4);
+    }
+
+    .btn-login:hover::after {
+      transform: rotate(30deg) translate(50%, 50%);
     }
 
     .signup-link {
@@ -263,15 +395,30 @@
     }
 
     .signup-link a {
-      color: #3498db;
+      color: #03a9f4;
       text-decoration: none;
       font-weight: 500;
       transition: color 0.3s;
+      position: relative;
+    }
+
+    .signup-link a::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #03a9f4;
+      transition: width 0.3s;
     }
 
     .signup-link a:hover {
-      color: #2980b9;
-      text-decoration: underline;
+      color: #0288d1;
+    }
+
+    .signup-link a:hover::after {
+      width: 100%;
     }
 
     .divider {
@@ -306,59 +453,72 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #f8fbfe;
-      border: 1px solid #e3f2fd;
-      color: #3498db;
+      background: #f1f8e9;
+      border: 1px solid #e1f5fe;
+      color: #03a9f4;
       font-size: 18px;
       cursor: pointer;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .social-btn::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(2,136,209,0.1), rgba(3,169,244,0.1));
+      opacity: 0;
+      transition: opacity 0.3s;
     }
 
     .social-btn:hover {
-      background: #e3f2fd;
+      background: #e1f5fe;
       transform: translateY(-3px);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     }
 
-    .decoration {
-      position: absolute;
-      z-index: 1;
+    .social-btn:hover::after {
+      opacity: 1;
     }
 
-    .book {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 24px;
+    /* 动画效果 */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .laptop {
-      position: absolute;
-      top: 20px;
-      left: 30px;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 24px;
+    .welcome-panel, .login-panel {
+      animation: fadeInUp 0.8s ease-out;
     }
 
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
+    .welcome-panel {
+      animation-delay: 0.2s;
+    }
 
-      .left-panel {
-        padding: 30px;
-      }
-
-      .right-panel {
-        padding: 40px 30px;
-      }
+    .login-panel {
+      animation-delay: 0.4s;
     }
   </style>
 </head>
 <body>
+<!-- 背景装饰元素 -->
+<div class="bg-circle circle-1"></div>
+<div class="bg-circle circle-2"></div>
+<div class="bg-circle circle-3"></div>
+
 <div class="container">
-  <div class="left-panel">
+  <!-- 欢迎面板 -->
+  <div class="welcome-panel">
     <div class="decoration book">
       <i class="fas fa-book"></i>
     </div>
@@ -389,7 +549,8 @@
     </div>
   </div>
 
-  <div class="right-panel">
+  <!-- 登录面板 -->
+  <div class="login-panel">
     <div class="login-header">
       <h2>欢迎回来</h2>
       <p>请登录您的账号继续使用平台</p>
@@ -445,48 +606,58 @@
   </div>
 </div>
 
-<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=320 height=65 src="https://i.y.qq.com/n2/m/outchain/player/index.html?songid=102340965&songtype=0" style="position: fixed; right: 0; bottom: 0"></iframe>
-
 <script>
-  // 简单的表单交互效果
+  // 增强的表单交互效果
   document.addEventListener('DOMContentLoaded', function() {
     const inputs = document.querySelectorAll('.form-control');
+    const loginBtn = document.querySelector('.btn-login');
+    const panels = document.querySelectorAll('.welcome-panel, .login-panel');
 
-    inputs.forEach(input => {
-      // 添加聚焦效果
-      input.addEventListener('focus', function() {
-        this.parentElement.parentElement.style.transform = 'translateY(-2px)';
+    // 面板悬浮效果
+    panels.forEach(panel => {
+      panel.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-10px)';
       });
 
-      // 移除聚焦效果
-      input.addEventListener('blur', function() {
-        this.parentElement.parentElement.style.transform = 'translateY(0)';
+      panel.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
       });
     });
 
-    // 登录按钮点击效果
-    const loginBtn = document.querySelector('.btn-login');
-    loginBtn.addEventListener('click', function(e) {
-      // e.preventDefault();
+    // 输入框交互效果
+    inputs.forEach(input => {
+      input.addEventListener('focus', function() {
+        this.parentElement.parentElement.style.transform = 'translateY(-2px)';
+        this.parentElement.style.borderColor = '#03a9f4';
+      });
 
-      // 简单验证
+      input.addEventListener('blur', function() {
+        this.parentElement.parentElement.style.transform = 'translateY(0)';
+        this.parentElement.style.borderColor = '#e1f5fe';
+      });
+    });
+
+    // 登录按钮效果
+    loginBtn.addEventListener('click', function(e) {
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
 
       if(username === '' || password === '') {
+        e.preventDefault();
         alert('请输入用户名和密码！');
         return;
       }
 
-      // 模拟登录
+      // 按钮动画效果
       this.innerHTML = '登录中...';
-      // this.disabled = true;
-      //
-      // setTimeout(() => {
-      //   alert('登录成功！');
-      //   this.innerHTML = '登录';
-      //   this.disabled = false;
-      // }, 1500);
+      this.style.background = 'linear-gradient(to right, #039be5, #0288d1)';
+      setTimeout(() => {
+        this.innerHTML = '登录成功 <i class="fas fa-check"></i>';
+        setTimeout(() => {
+          this.innerHTML = '登录';
+          this.style.background = 'linear-gradient(to right, #0288d1, #03a9f4)';
+        }, 1500);
+      }, 1000);
     });
   });
 </script>

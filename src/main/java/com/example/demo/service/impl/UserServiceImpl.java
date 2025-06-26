@@ -64,13 +64,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public int editUser(Account user, MultipartFile[] profilePicture){
+        Account oldUser = userMapper.SelectUserById(user.getId());
         if (profilePicture != null) {
             String fileName = fileUtils.uploadFile(profilePicture, user.getUsername());
             user.setProfilePicture(fileName);
         } else {
-            user.setProfilePicture(userMapper.SelectUserById(user.getId()).getProfilePicture());
+            user.setProfilePicture(oldUser.getProfilePicture());
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (Objects.equals(user.getPassword(), oldUser.getPassword())) {
+            user.setPassword(oldUser.getPassword());
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         return userMapper.UpdateUser(user);
     }
 

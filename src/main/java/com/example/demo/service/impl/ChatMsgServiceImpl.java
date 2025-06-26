@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.ChatMsgVO;
 import com.example.demo.mapper.ChatMsgMapper;
 import com.example.demo.service.ChatMsgService;
+import com.example.demo.util.fileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,9 @@ public class ChatMsgServiceImpl implements ChatMsgService {
 
     @Autowired
     private ChatMsgMapper chatMsgMapper;
+
+    @Autowired
+    private fileUtil fileUtil;
 
     @Override
     public int insertChatMsg(ChatMsgVO chatMsg) {
@@ -38,5 +42,17 @@ public class ChatMsgServiceImpl implements ChatMsgService {
             }
         }
         return unreadCount;
+    }
+
+    @Override
+    public int deleteAllChatMsgByPid(Integer pid) {
+        List<ChatMsgVO> chatMsgVOList = chatMsgMapper.selectMsgByPid(pid);
+        for (ChatMsgVO chatMsgVO : chatMsgVOList) {
+            if (chatMsgVO.getIsImg()){
+                fileUtil.deleteFile(chatMsgVO.getMContent());
+            }
+            chatMsgMapper.deleteByMsg(chatMsgVO);
+        }
+        return 1;
     }
 }

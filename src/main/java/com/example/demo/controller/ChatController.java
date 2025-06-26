@@ -48,7 +48,7 @@ public class ChatController {
 
     @PostMapping("/uploadImg")
     @ResponseBody
-    public String uploadImg(@RequestParam("files") MultipartFile img, Authentication authentication) {
+    public String uploadImg(@RequestParam("files") MultipartFile[] img, Authentication authentication) {
         return chatService.uploadImg(img, authentication.getName());
     }
 

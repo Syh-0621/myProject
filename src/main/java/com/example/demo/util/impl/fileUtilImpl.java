@@ -7,11 +7,15 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 @Component
 public class fileUtilImpl implements fileUtil {
+
+    private final String folderpath = "/home/syh/Pictures/img/";
+    private final String resourcepath = "/images/";
 
     /**
      * 上传文件
@@ -23,8 +27,6 @@ public class fileUtilImpl implements fileUtil {
     public String uploadFile(MultipartFile[] files, String username) {
         if (files == null || files.length == 0)
             return null;
-        String folderpath = "/home/syh/Pictures/img/";
-        String[] suffixs = new String[]{"jpg", "png", "jpeg", "bmp", "gif"};
         List<String> filespath = new ArrayList<>();
 
         for (MultipartFile file : files){
@@ -44,8 +46,22 @@ public class fileUtilImpl implements fileUtil {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
-            filespath.add("/images/" + filepath);
+            filespath.add(resourcepath + filepath);
         }
         return String.join(",", filespath);
+    }
+
+    /**
+     * 删除文件
+     * @param path 需要删除的文件路径，以逗号分隔
+     */
+    @Override
+    public void deleteFile(String path){
+        String[] paths = path.split(",");
+        for (String p : paths){
+            File file = new File(folderpath + p.substring(p.indexOf("/images/")+8));
+            if (file.exists())
+                file.delete();
+        }
     }
 }

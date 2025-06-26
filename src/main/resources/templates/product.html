@@ -369,6 +369,93 @@
         .hidden {
             display: none;
         }
+
+        /* 留言板块样式 */
+        h3 {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 20px;
+        }
+
+        #leaveMessageForm {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+
+        #leaveMessageForm textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            resize: vertical;
+            font-size: 1rem;
+        }
+
+        #leaveMessageForm button {
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            background: var(--primary);
+            color: white;
+        }
+
+        #leaveMessageForm button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(93, 156, 236, 0.3);
+        }
+
+        .message-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+        }
+
+        .message-item div {
+            margin-bottom: 5px;
+        }
+
+        .message-item div:nth-child(1) {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .message-item div:nth-child(2) {
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .message-item div:nth-child(3) {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .message-item button {
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            background: var(--secondary);
+            color: white;
+        }
+
+        .message-item button:hover {
+            background: var(--secondary-light);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -435,6 +522,27 @@
                 <a id="editBtn" class="btn btn-outline" href="#">
                     <i class="fas fa-edit"></i> 编辑商品
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h3>留言</h3>
+        <div id="leaveMessageForm">
+            <input type="hidden" name="pid" th:value="${product.pid}">
+            <input type="hidden" name="luser" th:value="${username}">
+            <textarea name="lcontent" id="lcontent" placeholder="请输入留言内容" required></textarea>
+            <button type="button" class="btn btn-primary" th:onclick="addMes()">留言</button>
+        </div>
+        <div th:each="mes:${leavemes}" class="message-item">
+            <div th:text="${mes.luser}" id="luser"></div>
+            <div th:text="${mes.lcontent}"></div>
+            <div th:text="${mes.ltime}"></div>
+            <div th:if="${username eq product.uname and mes.luser ne username}">
+                <button th:onclick="addchatByluser([[${mes.luser}]])" style="background: #3a7bd5">和他聊聊</button>
+            </div>
+            <div th:if="${mes.luser eq username}">
+                <button th:onclick="deleteMes([[${mes.pid}]], [[${mes.luser}]], [[${mes.lcontent}]], [[${mes.ltime}]])">删除</button>
             </div>
         </div>
     </div>
@@ -539,6 +647,60 @@
                 console.error("Error adding chat:", error);
             });
     }
+
+    function addchatByluser(luser) {
+        const user1 = document.getElementById("username").innerText;
+        const user2 = luser;
+        const pid = document.getElementById("pid").innerText;
+
+        axios.post("/chat/add?user1=" + user1 + "&user2=" + user2 + "&pid=" + pid)
+            .then(function (response) {
+                if (response.data === "success") {
+                    window.location.href = "/chat/chatList";
+                }
+            })
+            .catch(function (error) {
+                alert("发起聊天失败，请稍后再试");
+                console.error("Error adding chat:", error);
+            });
+    }
+
+    async function addMes() {
+        const pid = document.getElementById("pid").innerText;
+        const luser = document.getElementById("username").innerText;
+        const lcontent = document.getElementById("lcontent").value;
+        await axios.post("/leaveMes/add?pid=" + pid
+            + "&luser=" + luser
+            + "&lcontent=" + lcontent)
+            .then(function (response) {
+                if (response.data === "success") {
+                    location.reload();
+                } else {
+                    alert("留言失败，请稍后再试");
+                }
+            });
+    }
+
+    async function deleteMes(pid, luser, lcontent, ltime) {
+        await axios.post("/leaveMes/delete?pid=" + pid
+            + "&luser=" + luser
+            + "&lcontent=" + lcontent
+            + "&ltime=" + ltime)
+            .then(function (response) {
+                if (response.data === "success") {
+                    location.reload();
+                } else {
+                    alert("删除失败，请稍后再试");
+                }
+            })
+    }
+
+    document.querySelectorAll("div#luser").forEach(function (element) {
+        element.style.cursor = "pointer";
+        element.addEventListener("click", function () {
+            window.location.href = `/user/${element.innerText}`;
+        })
+    })
 </script>
 </body>
 </html>
